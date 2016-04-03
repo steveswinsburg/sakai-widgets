@@ -1,5 +1,5 @@
 
-package org.sakaiproject.widgets.myconnections;
+package org.sakaiproject.widgets.mycalendar;
 
 import org.apache.wicket.markup.html.WebPage;
 

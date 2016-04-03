@@ -1,4 +1,4 @@
-package org.sakaiproject.widgets.myconnections;
+package org.sakaiproject.widgets.mycalendar;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
