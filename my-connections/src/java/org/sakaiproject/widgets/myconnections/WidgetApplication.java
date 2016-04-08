@@ -2,6 +2,7 @@ package org.sakaiproject.widgets.myconnections;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.sakaiproject.widgets.myconnections.ui.WidgetPage;
 
 /**
  * Main application class
@@ -45,8 +46,8 @@ public class WidgetApplication extends WebApplication {
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<BasePage> getHomePage() {
-		return BasePage.class;
+	public Class<WidgetPage> getHomePage() {
+		return WidgetPage.class;
 	}
 
 	/**

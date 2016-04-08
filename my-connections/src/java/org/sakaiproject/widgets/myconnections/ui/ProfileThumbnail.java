@@ -1,5 +1,5 @@
 
-package org.sakaiproject.widgets.myconnections;
+package org.sakaiproject.widgets.myconnections.ui;
 
 import java.util.concurrent.TimeUnit;
 

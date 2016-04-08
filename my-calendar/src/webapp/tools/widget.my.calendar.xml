@@ -12,7 +12,7 @@
 		<!-- <configuration name="functions.require" value="calendar.read" /> -->
 		
 		<configuration name="help.button" value="false" />
-		<configuration name="sakai:tool-directurl-enabled" value="false" />
+		<configuration name="sakai:tool-directurl-enabled" value="true" />
 
 	</tool>
 </registration>
