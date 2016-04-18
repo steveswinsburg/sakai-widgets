@@ -13,6 +13,8 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.GridView;
@@ -60,7 +62,14 @@ public class WidgetPage extends WebPage {
 			protected void populateItem(final Item<BasicConnection> item) {
 				final BasicConnection connection = item.getModelObject();
 
-				final WebMarkupContainer itemWrap = new WebMarkupContainer("itemWrap");
+				final String url = "/direct/my/profile-view/" + connection.getUuid();
+
+				final PopupSettings settings = new PopupSettings();
+				settings.setTarget("_parent");
+
+				final ExternalLink itemWrap = new ExternalLink("itemWrap", url);
+				itemWrap.setPopupSettings(settings);
+
 				itemWrap.add(new ProfileThumbnail("img", Model.of(connection.getUuid())));
 				itemWrap.add(new Label("name", Model.of(connection.getDisplayName())));
 				item.add(itemWrap);
@@ -74,6 +83,7 @@ public class WidgetPage extends WebPage {
 				itemWrap.add(new EmptyPanel("img"));
 				itemWrap.add(new EmptyPanel("name"));
 				item.add(itemWrap);
+				item.setVisible(false);
 			}
 		};
 
