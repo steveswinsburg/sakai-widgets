@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<registration>
+	<tool id="widget.my.connections"
+    	title="Site Members"
+        description="A widget that shows the members of the site">
+    	
+    	<category name="project" />
+    	<category name="course" />
+    	<category name="portfolio" />
+		
+		<!-- <configuration name="reset.button" value="true" type="final" /> -->
+
+		<configuration name="help.button" value="false" />
+		<configuration name="sakai:tool-directurl-enabled" value="false" />
+		
+		
+
+	</tool>
+</registration>
