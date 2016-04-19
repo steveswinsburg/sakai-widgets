@@ -5,7 +5,7 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.sakaiproject.widgets.myconnections.ui.WidgetPage;
 
 /**
- * Main application class
+ * App class for My Connections widget
  *
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
  *
