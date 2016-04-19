@@ -1,8 +1,8 @@
-package org.sakaiproject.widgets.myconnections;
+package org.sakaiproject.widgets.sitemembers;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.sakaiproject.widgets.myconnections.ui.WidgetPage;
+import org.sakaiproject.widgets.sitemembers.ui.WidgetPage;
 
 /**
  * App class for My Connections widget
