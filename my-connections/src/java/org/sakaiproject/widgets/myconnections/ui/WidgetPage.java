@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
@@ -21,12 +22,17 @@ import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.profile2.logic.ProfileConnectionsLogic;
 import org.sakaiproject.profile2.model.BasicConnection;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.widgets.myconnections.ui.components.ProfileThumbnail;
 
 import lombok.extern.apachecommons.CommonsLog;
 
+/**
+ * Main page for the My Connections widget
+ */
 @CommonsLog
 public class WidgetPage extends WebPage {
 
@@ -39,8 +45,7 @@ public class WidgetPage extends WebPage {
 	private SessionManager sessionManager;
 
 	public WidgetPage() {
-		log.debug("BasePage()");
-
+		log.debug("WidgetPage()");
 	}
 
 	@Override
@@ -111,8 +116,8 @@ public class WidgetPage extends WebPage {
 		response.render(StringHeaderItem.forString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"));
 
 		// widget specific styles
-		// final String version = ServerConfigurationService.getString("portal.cdn.version", "");
-		// response.render(CssHeaderItem.forUrl(String.format("/gradebookng-tool/styles/gradebook-grades.css?version=%s", version)));
+		final String version = ServerConfigurationService.getString("portal.cdn.version", "");
+		response.render(CssHeaderItem.forUrl(String.format("/my-connections/styles/widget-styles.css?version=%s", version)));
 
 	}
 
