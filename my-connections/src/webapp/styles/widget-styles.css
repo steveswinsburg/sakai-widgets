@@ -1,3 +1,17 @@
-.img-circle {
+.round {
+	display: inline-block;
+	position: relative;
 	border-radius: 50%;
+	overflow: hidden;
+	width: 100px;
+	height: 100px;
 }
+
+.round img {
+	width: auto;
+  	height: 100%;
+	margin-left: auto;
+    margin-right: auto;   
+}
+
+/* to fix the centering they need to be background iamges. is this possible? */
