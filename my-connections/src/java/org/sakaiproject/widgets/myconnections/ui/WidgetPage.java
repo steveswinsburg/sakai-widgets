@@ -11,22 +11,14 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.StringHeaderItem;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.GridView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.profile2.logic.ProfileConnectionsLogic;
 import org.sakaiproject.profile2.model.BasicConnection;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.widgets.myconnections.ui.components.ProfileThumbnail;
+import org.sakaiproject.widgets.myconnections.ui.components.ConnectionsGrid;
 
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -58,44 +50,8 @@ public class WidgetPage extends WebPage {
 		// get connections
 		final List<BasicConnection> connections = this.connectionsLogic.getBasicConnectionsForUser(currentUserUuid);
 
-		final ListDataProvider<BasicConnection> dataProvider = new ListDataProvider<BasicConnection>(connections);
-
-		final GridView<BasicConnection> gridView = new GridView<BasicConnection>("rows", dataProvider) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void populateItem(final Item<BasicConnection> item) {
-				final BasicConnection connection = item.getModelObject();
-
-				final String url = "/direct/my/profile-view/" + connection.getUuid();
-
-				final PopupSettings settings = new PopupSettings();
-				settings.setTarget("_parent");
-
-				final ExternalLink itemWrap = new ExternalLink("itemWrap", url);
-				itemWrap.setPopupSettings(settings);
-
-				itemWrap.add(new ProfileThumbnail("img", Model.of(connection.getUuid())));
-				itemWrap.add(new Label("name", Model.of(connection.getDisplayName())));
-				item.add(itemWrap);
-
-			}
-
-			@Override
-			protected void populateEmptyItem(final Item<BasicConnection> item) {
-
-				final WebMarkupContainer itemWrap = new WebMarkupContainer("itemWrap");
-				itemWrap.add(new EmptyPanel("img"));
-				itemWrap.add(new EmptyPanel("name"));
-				item.add(itemWrap);
-				item.setVisible(false);
-			}
-		};
-
-		gridView.setRows(4);
-		gridView.setColumns(3);
-
-		add(gridView);
+		// add connections grid
+		add(new ConnectionsGrid("connections", Model.ofList(connections)));
 
 	}
 
