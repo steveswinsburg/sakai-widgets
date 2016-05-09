@@ -54,7 +54,7 @@ public class WidgetPage extends WebPage {
 
 		// widget specific styles
 		final String version = ServerConfigurationService.getString("portal.cdn.version", "");
-		response.render(CssHeaderItem.forUrl(String.format("/my-connections/styles/widget-styles.css?version=%s", version)));
+		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/widget-styles.css?version=%s", version)));
 
 	}
 
