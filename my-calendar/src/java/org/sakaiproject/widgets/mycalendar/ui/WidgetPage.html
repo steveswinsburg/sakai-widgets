@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" >
+ 
+<head>
+	<title><wicket:message key="app.title" /></title>
+</head>     
+<body>
+
+<div id="calendar"></div>
+<div id="events"></div>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript">
+
+// This will change once we make a call to get the events. 
+// At the moment one event will show up in the calendar, for testing purposes only
+var Event = function(text) {
+    this.text = text;
+};
+var events = {};
+events[new Date("05/14/2016")] = new Event("Test Event");
+
+console.dir(events);
+
+$("#calendar").datepicker({
+    beforeShowDay: function(date) {
+        var event = events[date];
+        if (event) {
+            return [true, "eventful-day", event.text];
+        }
+        else {
+            return [true, '', ''];
+        } 
+    },
+     onSelect: function(date) {
+   		$("#events").text(events[new Date(date)].text);
+    } 
+});
+
+</script>
+
+</body>
+</html>
