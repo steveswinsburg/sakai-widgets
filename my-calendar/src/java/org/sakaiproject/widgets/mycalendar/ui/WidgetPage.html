@@ -13,30 +13,60 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
-// This will change once we make a call to get the events. 
-// At the moment one event will show up in the calendar, for testing purposes only
-var Event = function(text) {
-    this.text = text;
+var Event = function(date, title, type, duration) {
+    this.date = date;
+    this.title = title;
+    this.type = type;
+    this.duration = duration;
 };
-var events = {};
-events[new Date("05/14/2016")] = new Event("Test Event");
+
+jQuery.ajax({
+    url: '/direct/calendar/site/14d3529e-da64-475a-b70f-765c2ed8bb50.json',
+    success: function (result) {
+        eventList = result.calendar_collection;
+    },
+    async: false
+});
 
 console.dir(events);
 
 $("#calendar").datepicker({
     beforeShowDay: function(date) {
-        var event = events[date];
-        if (event) {
-            return [true, "eventful-day", event.text];
+    	var events = getEventsForDate(date);
+		if (events.length > 0) {
+            return [true, "eventful-day", getTextForDate(date, events)];
         }
         else {
             return [true, '', ''];
         } 
     },
      onSelect: function(date) {
-   		$("#events").text(events[new Date(date)].text);
+   		$("#events").text(getTextForDate(new Date(date), getEventsForDate(new Date(date))));
     } 
 });
+
+function getEventsForDate(date) {
+	var events = [];
+	for (i = 0; i < eventList.length; i++) {
+		eventDate = new Date(eventList[i].firstTime.display);
+		if (eventDate.getFullYear() === date.getFullYear() &&
+				eventDate.getMonth() === date.getMonth() &&
+				eventDate.getDate() === date.getDate()) {
+			events.push(new Event(eventDate, eventList[i].title, eventList[i].type, eventList[i].duration));
+		}
+	}
+	return events;
+}
+
+function getTextForDate(date, events) {
+	var textToDisplay = events[0].type +  ': ' + events[0].title;
+   	if (events.length > 1) {
+   		for (i = 1; i < events.length; i++) {
+   			textToDisplay = textToDisplay.concat("\n" + events[i].type + ": " + events[i].title);
+   		}
+   	}
+   	return textToDisplay;
+}
 
 </script>
 
