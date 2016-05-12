@@ -6,8 +6,14 @@
 </head>     
 <body>
 
+<!-- TODO may need a way to namespace all of this, aka uPortal style? For now just look it up and assume one per page -->
+
+<!--  TOOD change these to classes, see data below -->
 <div id="calendar"></div>
 <div id="events"></div>
+
+<!-- Wicket loads some pieces of data into this container which can be looked up by the Javascript -->
+<div class="my-calendar-data" wicket:id="data">This holds data</div>
 
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
