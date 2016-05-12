@@ -3,6 +3,7 @@ package org.sakaiproject.widgets.mycalendar.ui;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -10,16 +11,17 @@ import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.tool.api.ToolManager;
 
 public class WidgetPage extends WebPage {
 
 	private static final long serialVersionUID = 1L;
 
-	@SpringBean(name = "org.sakaiproject.tool.api.SessionManager")
-	private SessionManager sessionManager;
+	@SpringBean(name = "org.sakaiproject.tool.api.ToolManager")
+	private ToolManager toolManager;
 
 	public WidgetPage() {
 		// log.debug("WidgetPage()");
@@ -28,6 +30,12 @@ public class WidgetPage extends WebPage {
 	@Override
 	public void onInitialize() {
 		super.onInitialize();
+
+		// setup the data for the page
+		final Label data = new Label("data");
+		data.add(new AttributeAppender("data-siteid", getCurrentSiteId()));
+		add(data);
+
 	}
 
 	@Override
@@ -50,6 +58,19 @@ public class WidgetPage extends WebPage {
 		final String version = ServerConfigurationService.getString("portal.cdn.version", "");
 		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/widget-styles.css?version=%s", version)));
 
+	}
+
+	/**
+	 * Get the current siteId
+	 *
+	 * @return
+	 */
+	private String getCurrentSiteId() {
+		try {
+			return this.toolManager.getCurrentPlacement().getContext();
+		} catch (final Exception e) {
+			return null;
+		}
 	}
 
 }
