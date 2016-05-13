@@ -40,7 +40,7 @@ $(document).ready(function() {
 	    beforeShowDay: function(date) {
 	    	var events = getEventsForDate(date);
 			if (events.length > 0) {
-	            return [true, "eventful-day", getTextForDate(date, events)];
+	            return [true, "my-calendar-eventful-day", getTextForDate(date, events)];
 	        }
 	        else {
 	            return [true, '', ''];
