@@ -9,8 +9,8 @@
 <!-- TODO may need a way to namespace all of this, aka uPortal style? For now just look it up and assume one per page -->
 
 <!--  TOOD change these to classes, see data below -->
-<div id="calendar"></div>
-<div id="events"></div>
+<div class="my-calendar"></div>
+<div class="my-calendar-events"></div>
 
 <!-- Wicket loads some pieces of data into this container which can be looked up by the Javascript -->
 <div class="my-calendar-data" wicket:id="data">This holds data</div>
@@ -19,36 +19,40 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
+var siteId;
 var Event = function(date, title, type, duration) {
     this.date = date;
     this.title = title;
     this.type = type;
     this.duration = duration;
 };
-
-jQuery.ajax({
-    url: '/direct/calendar/site/14d3529e-da64-475a-b70f-765c2ed8bb50.json',
-    success: function (result) {
-        eventList = result.calendar_collection;
-    },
-    async: false
-});
-
-console.dir(events);
-
-$("#calendar").datepicker({
-    beforeShowDay: function(date) {
-    	var events = getEventsForDate(date);
-		if (events.length > 0) {
-            return [true, "eventful-day", getTextForDate(date, events)];
-        }
-        else {
-            return [true, '', ''];
-        } 
-    },
-     onSelect: function(date) {
-   		$("#events").text(getTextForDate(new Date(date), getEventsForDate(new Date(date))));
-    } 
+$(document).ready(function() {
+	siteId = $(".my-calendar-data").attr("data-siteid");
+	jQuery.ajax({
+	    url: '/direct/calendar/site/' + siteId + '.json',
+	    success: function (result) {
+	        eventList = result.calendar_collection;
+	    },
+	    async: false
+	});
+	
+	$(".my-calendar").datepicker({
+	    beforeShowDay: function(date) {
+	    	var events = getEventsForDate(date);
+			if (events.length > 0) {
+	            return [true, "my-calendar-eventful-day", getTextForDate(date, events)];
+	        }
+	        else {
+	            return [true, '', ''];
+	        } 
+	    },
+	     onSelect: function(date) {
+	    	 var events = getEventsForDate(new Date(date));
+	    	 if (events.length > 0) {
+		   		$(".my-calendar-events").text(getTextForDate(new Date(date), events));
+	    	 }
+	    } 
+	});
 });
 
 function getEventsForDate(date) {
