@@ -69,10 +69,12 @@ function getEventsForDate(date) {
 }
 
 function getTextForDate(date, events) {
-	var textToDisplay = events[0].type +  ': ' + events[0].title;
+	var time = events[0].date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+	var textToDisplay = time + " " + events[0].type +  '\n' + events[0].title;
    	if (events.length > 1) {
    		for (i = 1; i < events.length; i++) {
-   			textToDisplay = textToDisplay.concat("\n" + events[i].type + ": " + events[i].title);
+	   		var time = events[i].date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+   			textToDisplay = textToDisplay.concat("\n" + time + " " + events[i].type + "\n" + events[i].title);
    		}
    	}
    	return textToDisplay;
