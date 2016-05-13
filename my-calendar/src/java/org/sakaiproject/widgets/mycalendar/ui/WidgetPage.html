@@ -47,7 +47,10 @@ $("#calendar").datepicker({
         } 
     },
      onSelect: function(date) {
-   		$("#events").text(getTextForDate(new Date(date), getEventsForDate(new Date(date))));
+    	 var events = getEventsForDate(date);
+    	 if (events.length > 0) {
+	   		$("#my-calendar-events").text(getTextForDate(new Date(date), events));
+    	 }
     } 
 });
 
