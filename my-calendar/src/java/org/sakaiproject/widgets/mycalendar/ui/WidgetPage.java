@@ -34,6 +34,9 @@ public class WidgetPage extends WebPage {
 		// setup the data for the page
 		final Label data = new Label("data");
 		data.add(new AttributeAppender("data-siteid", getCurrentSiteId()));
+
+		// this is the format from the calendar JSON and doesnt change - will be removed when we have proper date handling in this widget
+		data.add(new AttributeAppender("data-dateformat", "DD/MM/YYYY h:mm a"));
 		add(data);
 
 	}
