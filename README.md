@@ -19,8 +19,11 @@ Currnetly requires Sakai 12, or backport this feature: https://jira.sakaiproject
 ## Available configuration
 
 ````
-# Set the maximum number of users to show in each setion within the Site Members widget
-widget.sitemembers.maxprofiles=30
+# Set the maximum number of users to show in each section within the Site Members widget
+widget.sitemembers.maxusers=30
+
+# Set the maximum number of connections to show in the My Connections widget
+widget.myconnections.maxusers=30
 
 ````
 
