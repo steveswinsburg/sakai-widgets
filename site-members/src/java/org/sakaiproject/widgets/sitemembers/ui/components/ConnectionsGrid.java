@@ -45,6 +45,7 @@ public class ConnectionsGrid extends Panel {
 
 				final String url = "/direct/my/profile-view/" + connection.getUuid();
 
+				// This is currently a popup as we are in a frame. Once we acn render inline this can be changed to a normal link
 				final PopupSettings settings = new PopupSettings();
 				settings.setTarget("_parent");
 
