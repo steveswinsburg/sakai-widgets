@@ -57,11 +57,11 @@ public class WidgetPage extends WebPage {
 	private ServerConfigurationService serverConfigurationService;
 
 	/**
-	 * Maximum number profiles to show.
+	 * Maximum number of users to show in each section
 	 *
-	 * Can be overridden via: widget.sitemembers.maxprofiles=30
+	 * Can be overridden via: widget.sitemembers.maxusers=30
 	 */
-	int maxProfiles = 30;
+	int maxUsers = 30;
 
 	public WidgetPage() {
 		log.debug("WidgetPage()");
@@ -72,7 +72,7 @@ public class WidgetPage extends WebPage {
 		super.onInitialize();
 
 		// get max profiles
-		this.maxProfiles = this.serverConfigurationService.getInt("widget.sitemembers.maxprofiles", this.maxProfiles);
+		this.maxUsers = this.serverConfigurationService.getInt("widget.sitemembers.maxusers", this.maxUsers);
 
 		// get current site id
 		final String currentSiteId = this.toolManager.getCurrentPlacement().getContext();
@@ -144,7 +144,7 @@ public class WidgetPage extends WebPage {
 	/**
 	 * Get the members with the given role.
 	 *
-	 * Sorted by online status then displayname. Maximum values is
+	 * Sorted by online status then display name. Maximum returned is 30 but can be overridden.
 	 *
 	 * @param siteId the site id to get the members for
 	 * @param role the role we want to get the users for
@@ -175,7 +175,7 @@ public class WidgetPage extends WebPage {
 			// get slice
 			rval = rval
 					.stream()
-					.limit(this.maxProfiles)
+					.limit(this.maxUsers)
 					.collect(Collectors.toList());
 
 		} catch (final IdUnusedException e) {
