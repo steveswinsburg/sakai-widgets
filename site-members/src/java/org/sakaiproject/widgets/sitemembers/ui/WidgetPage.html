@@ -6,11 +6,20 @@
 </head>     
 <body>
 
-<h3><wicket:message key="heading.instructors" /></h3>
-<div wicket:id="instructors"></div>
+<wicket:enclosure>
+	<h3><wicket:message key="heading.instructors" /></h3>
+	<div wicket:id="instructors"></div>
+</wicket:enclosure>
 
-<h3><wicket:message key="heading.members" /></h3>
-<div wicket:id="members"></div>
+<wicket:enclosure>
+	<h3><wicket:message key="heading.tas" /></h3>
+	<div wicket:id="tas"></div>
+</wicket:enclosure>
+
+<wicket:enclosure>
+	<h3><wicket:message key="heading.members" /></h3>
+	<div wicket:id="members"></div>
+</wicket:enclosure>
 
 </body>
 </html>

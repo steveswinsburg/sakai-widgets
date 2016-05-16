@@ -1,8 +1,11 @@
 
 package org.sakaiproject.widgets.mycalendar.ui;
 
+import java.util.TimeZone;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -14,7 +17,12 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.time.api.TimeService;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.ToolManager;
+import org.sakaiproject.user.api.Preferences;
+import org.sakaiproject.user.api.PreferencesService;
 
 public class WidgetPage extends WebPage {
 
@@ -22,6 +30,12 @@ public class WidgetPage extends WebPage {
 
 	@SpringBean(name = "org.sakaiproject.tool.api.ToolManager")
 	private ToolManager toolManager;
+
+	@SpringBean(name = "org.sakaiproject.tool.api.SessionManager")
+	private SessionManager sessionManager;
+
+	@SpringBean(name = "org.sakaiproject.user.api.PreferencesService")
+	private PreferencesService preferencesService;
 
 	public WidgetPage() {
 		// log.debug("WidgetPage()");
@@ -34,9 +48,8 @@ public class WidgetPage extends WebPage {
 		// setup the data for the page
 		final Label data = new Label("data");
 		data.add(new AttributeAppender("data-siteid", getCurrentSiteId()));
+		data.add(new AttributeAppender("data-tz", getUserTimeZone().getID()));
 
-		// this is the format from the calendar JSON and doesnt change - will be removed when we have proper date handling in this widget
-		data.add(new AttributeAppender("data-dateformat", "DD/MM/YYYY h:mm a"));
 		add(data);
 
 	}
@@ -74,6 +87,37 @@ public class WidgetPage extends WebPage {
 		} catch (final Exception e) {
 			return null;
 		}
+	}
+
+	/**
+	 * Get current user id
+	 *
+	 * @return
+	 */
+	private String getCurrentUserId() {
+		return this.sessionManager.getCurrentSessionUserId();
+	}
+
+	/**
+	 * Get a user's timezone from their preferences.
+	 *
+	 * @param userUuid uuid of the user to get preferences for
+	 * @return TimeZone from user preferences or the default timezone of the server if none is set
+	 */
+	private TimeZone getUserTimeZone() {
+
+		TimeZone timezone;
+		final Preferences prefs = this.preferencesService.getPreferences(getCurrentUserId());
+		final ResourceProperties props = prefs.getProperties(TimeService.APPLICATION_ID);
+		final String tzPref = props.getProperty(TimeService.TIMEZONE_KEY);
+
+		if (StringUtils.isNotBlank(tzPref)) {
+			timezone = TimeZone.getTimeZone(tzPref);
+		} else {
+			timezone = TimeZone.getDefault();
+		}
+
+		return timezone;
 	}
 
 }

@@ -4,7 +4,6 @@ package org.sakaiproject.widgets.sitemembers.ui.components;
 import java.util.List;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
@@ -45,6 +44,7 @@ public class ConnectionsGrid extends Panel {
 
 				final String url = "/direct/my/profile-view/" + connection.getUuid();
 
+				// This is currently a popup as we are in a frame. Once we acn render inline this can be changed to a normal link
 				final PopupSettings settings = new PopupSettings();
 				settings.setTarget("_parent");
 
@@ -52,7 +52,7 @@ public class ConnectionsGrid extends Panel {
 				itemWrap.setPopupSettings(settings);
 
 				itemWrap.add(new ProfileThumbnail("img", Model.of(connection.getUuid())));
-				itemWrap.add(new Label("name", Model.of(connection.getDisplayName())));
+				// itemWrap.add(new Label("name", Model.of(connection.getDisplayName())));
 				item.add(itemWrap);
 
 			}
@@ -62,7 +62,7 @@ public class ConnectionsGrid extends Panel {
 
 				final WebMarkupContainer itemWrap = new WebMarkupContainer("itemWrap");
 				itemWrap.add(new EmptyPanel("img"));
-				itemWrap.add(new EmptyPanel("name"));
+				// itemWrap.add(new EmptyPanel("name"));
 				item.add(itemWrap);
 				item.setVisible(false);
 			}
