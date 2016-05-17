@@ -8,15 +8,16 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 
 /**
- * Renders a user's profile thumbnail via the direct entity URL.
+ * Renders a user's profile thumbnail via the direct entity URL. The image is rendered as a background image so it can be styled easier (ie
+ * made round).
  *
- * Attach to an img tag and provide the user uuid in the model
+ * Attach to an 'a' tag and provide the user uuid in the model.
  *
  * e.g. <code>
- * &lt;img wicket:id="photo" /&gt;
+ * &lt;a wicket:id="photo" /&gt;
  * </code> <br />
  * <code>
- * add(new ProfileImage("photo", new Model<String>(userUuid)));
+ * add(new ProfileThumbnail("photo", new Model<String>(userUuid)));
  * </code>
  *
  * @author Steve Swinsburg (steve.swinsburg@gmail.com)
@@ -32,15 +33,17 @@ public class ProfileThumbnail extends WebComponent {
 	@Override
 	protected void onComponentTag(final ComponentTag tag) {
 		super.onComponentTag(tag);
-		checkComponentTag(tag, "img");
+		checkComponentTag(tag, "a");
 
 		final String userUuid = this.getDefaultModelObjectAsString();
 
-		// Cache for a minute
-		final String url = "/direct/profile/" + userUuid + "/image/thumb" + "?t="
+		// image url, cached for a minute
+		final String imageUrl = "/direct/profile/" + userUuid + "/image/thumb" + "?t="
 				+ TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
 
-		tag.put("src", url);
+		// output image
+		tag.put("style", "background-image:url(" + imageUrl + ")");
+
 	}
 
 }
