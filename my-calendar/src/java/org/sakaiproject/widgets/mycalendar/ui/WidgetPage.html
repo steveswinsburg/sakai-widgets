@@ -51,7 +51,9 @@ $(document).ready(function() {
 	    	 if (events.length > 0) {
 		   		$(".my-calendar-events").text(getTextForDate(new Date(date), events));
 	    	 }
-	    } 
+	    },
+	    // config
+	    showOtherMonths: true
 	});
 });
 
