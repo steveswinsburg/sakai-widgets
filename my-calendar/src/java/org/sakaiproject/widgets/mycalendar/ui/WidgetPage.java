@@ -16,7 +16,7 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.time.api.TimeService;
 import org.sakaiproject.tool.api.SessionManager;
@@ -37,6 +37,9 @@ public class WidgetPage extends WebPage {
 	@SpringBean(name = "org.sakaiproject.user.api.PreferencesService")
 	private PreferencesService preferencesService;
 
+	@SpringBean(name = "org.sakaiproject.component.api.ServerConfigurationService")
+	private ServerConfigurationService serverConfigurationService;
+
 	public WidgetPage() {
 		// log.debug("WidgetPage()");
 	}
@@ -51,18 +54,16 @@ public class WidgetPage extends WebPage {
 		data.add(new AttributeAppender("data-tz", getUserTimeZone().getID()));
 
 		add(data);
-
 	}
 
 	@Override
 	public void renderHead(final IHeaderResponse response) {
 		super.renderHead(response);
 
+		final String version = this.serverConfigurationService.getString("portal.cdn.version", "");
+
 		// get the Sakai skin header fragment from the request attribute
 		final HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
-
-		response.render(new PriorityHeaderItem(
-				JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getJQueryReference())));
 
 		response.render(StringHeaderItem.forString((String) request.getAttribute("sakai.html.head")));
 		response.render(OnLoadHeaderItem.forScript("setMainFrameHeight( window.name )"));
@@ -70,10 +71,14 @@ public class WidgetPage extends WebPage {
 		// Tool additions (at end so we can override if required)
 		response.render(StringHeaderItem.forString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"));
 
-		// widget specific styles
-		final String version = ServerConfigurationService.getString("portal.cdn.version", "");
-		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/widget-styles.css?version=%s", version)));
+		// for datepicker
+		response.render(new PriorityHeaderItem(
+				JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getJQueryReference())));
+		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/jquery-ui.min.css?version=%s", version)));
+		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jquery-ui.min.js?version=%s", version)));
 
+		// widget specific styles
+		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/widget-styles.css?version=%s", version)));
 	}
 
 	/**
