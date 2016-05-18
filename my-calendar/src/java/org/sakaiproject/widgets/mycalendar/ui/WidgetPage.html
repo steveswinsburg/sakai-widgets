@@ -8,15 +8,12 @@
 
 <!-- TODO may need a way to namespace all of this, aka uPortal style? For now just look it up and assume one per page -->
 
-<!--  TOOD change these to classes, see data below -->
 <div class="my-calendar"></div>
 <div class="my-calendar-events"></div>
 
 <!-- Wicket loads some pieces of data into this container which can be looked up by the Javascript -->
 <div class="my-calendar-data" wicket:id="data">This holds data</div>
 
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/javascript">
 
 var siteId;
@@ -40,18 +37,32 @@ $(document).ready(function() {
 	    beforeShowDay: function(date) {
 	    	var events = getEventsForDate(date);
 			if (events.length > 0) {
-	            return [true, "my-calendar-eventful-day", events.length + " event(s)"];
+	            return [true, "my-calendar-eventful-day", events.length + (events.length > 1 ? " events" : " event")];
 	        }
 	        else {
 	            return [true, '', ''];
 	        } 
 	    },
 	     onSelect: function(date) {
-	    	 var events = getEventsForDate(new Date(date));
+	    	 formattedDate = date.substring(6,10) + "-" + date.substring(0,2) + "-" + date.substring(3,5);
+	    	 
+	    	 jQuery.ajax({
+	    		    url: "/direct/calendar/site/" + siteId + ".json?firstDate=" + formattedDate + "&lastDate=" + formattedDate,
+	    		    success: function (result) {
+	    		        events = result.calendar_collection;
+	    		    },
+	    		    async: false
+	    		});
+	    	 
 	    	 if (events.length > 0) {
-		   		$(".my-calendar-events").text(getTextForDate(new Date(date), events));
+	    		 $(".my-calendar-events").text(formatEventsText(events));
+	    	 } 
+	    	 else {
+	    		 $(".my-calendar-events").text("");
 	    	 }
-	    } 
+	    },
+	    // config
+	    showOtherMonths: true
 	});
 });
 
@@ -68,9 +79,13 @@ function getEventsForDate(date) {
 	return events;
 }
 
+/* <<<<<<< HEAD
 function getTextForDate(date, events) {
 	var time = events[0].date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 	var textToDisplay = time + " " + events[0].type +  '\n' + events[0].title;
+======= */
+function formatEventsText(events) {
+	var textToDisplay = events[0].type +  ': ' + events[0].title;
    	if (events.length > 1) {
    		for (i = 1; i < events.length; i++) {
 	   		var time = events[i].date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});

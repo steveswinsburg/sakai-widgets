@@ -3,10 +3,7 @@ package org.sakaiproject.widgets.myconnections.ui.components;
 
 import java.util.List;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -17,7 +14,7 @@ import org.apache.wicket.model.Model;
 import org.sakaiproject.profile2.model.BasicConnection;
 
 /**
- * Generic grid panel that can be used to render a list of {@link BasicConnection}s
+ * Generic grid panel that can be used to render a list of {@link BasicConnection}s as their images
  */
 public class ConnectionsGrid extends Panel {
 
@@ -42,34 +39,22 @@ public class ConnectionsGrid extends Panel {
 			@Override
 			protected void populateItem(final Item<BasicConnection> item) {
 				final BasicConnection connection = item.getModelObject();
-
-				final String url = "/direct/my/profile-view/" + connection.getUuid();
-
-				final PopupSettings settings = new PopupSettings();
-				settings.setTarget("_parent");
-
-				final ExternalLink itemWrap = new ExternalLink("itemWrap", url);
-				itemWrap.setPopupSettings(settings);
-
-				itemWrap.add(new ProfileThumbnail("img", Model.of(connection.getUuid())));
-				itemWrap.add(new Label("name", Model.of(connection.getDisplayName())));
-				item.add(itemWrap);
-
+				final ProfileThumbnail img = new ProfileThumbnail("img", Model.of(connection.getUuid()));
+				img.add(new AttributeModifier("href", "/direct/my/profile-view/" + connection.getUuid()));
+				img.add(new AttributeModifier("target", "_top"));
+				img.add(new AttributeModifier("title", connection.getDisplayName()));
+				item.add(img);
 			}
 
 			@Override
 			protected void populateEmptyItem(final Item<BasicConnection> item) {
-
-				final WebMarkupContainer itemWrap = new WebMarkupContainer("itemWrap");
-				itemWrap.add(new EmptyPanel("img"));
-				itemWrap.add(new EmptyPanel("name"));
-				item.add(itemWrap);
+				item.add(new EmptyPanel("img"));
 				item.setVisible(false);
 			}
 		};
 
-		gridView.setRows(4);
-		gridView.setColumns(3);
+		gridView.setRows(8);
+		gridView.setColumns(4);
 
 		add(gridView);
 

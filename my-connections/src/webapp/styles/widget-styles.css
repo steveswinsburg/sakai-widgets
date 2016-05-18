@@ -1,17 +1,17 @@
-.round {
+/* apply to an element with a background image to make rounded and centred */
+.rounded {
+	width: 70px;
+	height: 70px;
 	display: inline-block;
-	position: relative;
+	background-size: auto 100%;
+	background-position: 50%;
 	border-radius: 50%;
-	overflow: hidden;
-	width: 100px;
-	height: 100px;
+	position: relative;
+	margin-top: 0;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	margin-left: 0;
 }
 
-.round img {
-	width: auto;
-  	height: 100%;
-	margin-left: auto;
-    margin-right: auto;   
-}
 
-/* to fix the centering they need to be background iamges. is this possible? */
+
