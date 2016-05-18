@@ -77,7 +77,6 @@ public class WidgetPage extends WebPage {
 		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/jquery-ui.min.css?version=%s", version)));
 		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jquery-ui.min.js?version=%s", version)));
 		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment.js?version=%s", version)));
-		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment-timezone.js?version=%s", version)));
 		response.render(
 				JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment-timezone-with-data.js?version=%s", version)));
 
