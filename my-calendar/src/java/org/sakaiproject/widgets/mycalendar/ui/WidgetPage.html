@@ -9,11 +9,12 @@
 <!-- TODO may need a way to namespace all of this, aka uPortal style? For now just look it up and assume one per page -->
 
 <div class="my-calendar"></div>
+<h1 class="my-calendar-event-heading"></h1>
 <div class="my-calendar-events"></div>
 
 <!-- Wicket loads some pieces of data into this container which can be looked up by the Javascript -->
 <div class="my-calendar-data" wicket:id="data">This holds data</div>
-
+<script src="https://cdn.jsdelivr.net/momentjs/2.13.0/moment.min.js"></script>
 <script type="text/javascript">
 
 var siteId;
@@ -55,11 +56,17 @@ $(document).ready(function() {
 	    		});
 	    	 
 	    	 if (events.length > 0) {
-	    		 $(".my-calendar-events").text(formatEventsText(events));
+	    		 $(".my-calendar-event-heading").text("Events for " + moment(formattedDate).format("MMM DD, YYYY"));
+	    		 $(".my-calendar-events").text(formatEventsText(events, date));
 	    	 } 
 	    	 else {
+	    		 $(".my-calendar-event-heading").text("");
 	    		 $(".my-calendar-events").text("");
 	    	 }
+	    },
+	    onChangeMonthYear: function() {
+	    	$(".my-calendar-events").text("");
+	    	$(".my-calendar-event-heading").text("");
 	    },
 	    // config
 	    showOtherMonths: true
@@ -79,17 +86,11 @@ function getEventsForDate(date) {
 	return events;
 }
 
-/* <<<<<<< HEAD
-function getTextForDate(date, events) {
-	var time = events[0].date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
-	var textToDisplay = time + " " + events[0].type +  '\n' + events[0].title;
-======= */
 function formatEventsText(events) {
 	var textToDisplay = events[0].type +  ': ' + events[0].title;
    	if (events.length > 1) {
    		for (i = 1; i < events.length; i++) {
-	   		var time = events[i].date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
-   			textToDisplay = textToDisplay.concat("\n" + time + " " + events[i].type + "\n" + events[i].title);
+   			textToDisplay = textToDisplay.concat("\n" + events[i].type + ": " + events[i].title);
    		}
    	}
    	return textToDisplay;

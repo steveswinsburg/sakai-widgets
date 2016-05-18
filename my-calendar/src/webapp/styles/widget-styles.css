@@ -5,3 +5,7 @@
 div.my-calendar-events {
 	white-space: pre;
 }
+
+.my-calendar-event-heading {
+	font-size: 16px;
+}
