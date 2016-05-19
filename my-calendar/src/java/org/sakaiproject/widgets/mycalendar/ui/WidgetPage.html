@@ -9,11 +9,11 @@
 <!-- TODO may need a way to namespace all of this, aka uPortal style? For now just look it up and assume one per page -->
 
 <div class="my-calendar"></div>
+<h3 class="my-calendar-event-heading"></h3>
 <div class="my-calendar-events"></div>
 
 <!-- Wicket loads some pieces of data into this container which can be looked up by the Javascript -->
 <div class="my-calendar-data" wicket:id="data">This holds data</div>
-
 <script type="text/javascript">
 
 var siteId;
@@ -25,6 +25,7 @@ var Event = function(date, title, type, duration) {
 };
 $(document).ready(function() {
 	siteId = $(".my-calendar-data").attr("data-siteid");
+	timeZone = $(".my-calendar-data").attr("data-tz");
 	jQuery.ajax({
 	    url: '/direct/calendar/site/' + siteId + '.json',
 	    success: function (result) {
@@ -55,11 +56,20 @@ $(document).ready(function() {
 	    		});
 	    	 
 	    	 if (events.length > 0) {
-	    		 $(".my-calendar-events").text(formatEventsText(events));
+	    		 $(".my-calendar-event-heading").text("Events for " + moment(formattedDate).format("MMM DD, YYYY"));
+	    		 $(".my-calendar-events").text(formatEventsText(events, date));
 	    	 } 
 	    	 else {
+	    		 $(".my-calendar-event-heading").text("");
 	    		 $(".my-calendar-events").text("");
 	    	 }
+	    	 
+	    	 setMainFrameHeightNow(window.name, -1);
+	    	
+	    },
+	    onChangeMonthYear: function() {
+	    	$(".my-calendar-events").text("");
+	    	$(".my-calendar-event-heading").text("");
 	    },
 	    // config
 	    showOtherMonths: true
@@ -69,10 +79,8 @@ $(document).ready(function() {
 function getEventsForDate(date) {
 	var events = [];
 	for (i = 0; i < eventList.length; i++) {
-		eventDate = new Date(eventList[i].firstTime.display);
-		if (eventDate.getFullYear() === date.getFullYear() &&
-				eventDate.getMonth() === date.getMonth() &&
-				eventDate.getDate() === date.getDate()) {
+		eventDate = moment(eventList[i].firstTime.time).tz(timeZone);
+		if (eventDate.isSame(moment(date), "day")) {
 			events.push(new Event(eventDate, eventList[i].title, eventList[i].type, eventList[i].duration));
 		}
 	}
