@@ -17,12 +17,6 @@
 <script type="text/javascript">
 
 var siteId;
-var Event = function(date, title, type, duration) {
-    this.date = date;
-    this.title = title;
-    this.type = type;
-    this.duration = duration;
-};
 $(document).ready(function() {
 	siteId = $(".my-calendar-data").attr("data-siteid");
 	timeZone = $(".my-calendar-data").attr("data-tz");
@@ -36,9 +30,9 @@ $(document).ready(function() {
 	
 	$(".my-calendar").datepicker({
 	    beforeShowDay: function(date) {
-	    	var events = getEventsForDate(date);
-			if (events.length > 0) {
-	            return [true, "my-calendar-eventful-day", events.length + (events.length > 1 ? " events" : " event")];
+	    	var numEvents = getEventsForDate(date);
+			if (numEvents > 0) {
+	            return [true, "my-calendar-eventful-day", numEvents + (numEvents > 1 ? " events" : " event")];
 	        }
 	        else {
 	            return [true, '', ''];
@@ -77,14 +71,14 @@ $(document).ready(function() {
 });
 
 function getEventsForDate(date) {
-	var events = [];
+	var numEvents = 0;
 	for (i = 0; i < eventList.length; i++) {
 		eventDate = moment(eventList[i].firstTime.time).tz(timeZone);
 		if (eventDate.isSame(moment(date), "day")) {
-			events.push(new Event(eventDate, eventList[i].title, eventList[i].type, eventList[i].duration));
+			numEvents += 1;
 		}
 	}
-	return events;
+	return numEvents;
 }
 
 function formatEventsText(events) {
