@@ -54,17 +54,34 @@ $(document).ready(function() {
 	    		        events = result.calendar_collection;
 	    		    },
 	    		    async: false
-	    		});
+	    		}); 
 	    	 
 	    	 if (events.length > 0) {
+	    		 $(".my-calendar-events").text("");
 	    		 $(".my-calendar-event-heading").text("Events for " + moment(formattedDate).format("MMM DD, YYYY"));
-	    		 $(".my-calendar-events").text(formatEventsText(events, date));
+				 var eventsDisplay = [];
+	    		 for (i = 0; i < events.length; i++) {
+	    			 if (events[i].assignmentId.length > 0) {
+	    				 jQuery.ajax({
+    		    		    url: "/direct/assignment/deepLink/" + siteId + "/" + events[i].assignmentId + ".json",
+    		    		    success: function (result) {
+    		    		        assignmentUrl = result.data.assignmentUrl;
+    		    		    },
+    		    		    async: false
+	    		    	}); 
+	    				 
+	    				eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title, url: assignmentUrl});
+	    			 }
+	    			 else {
+	    				eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title});
+	    			 }
+	    		 }
+		    	 $(".my-calendar-event-template").tmpl(eventsDisplay).appendTo(".my-calendar-events");
 	    	 } 
 	    	 else {
 	    		 $(".my-calendar-event-heading").text("");
 	    		 $(".my-calendar-events").text("");
 	    	 }
-	    	 
 	    	 setMainFrameHeightNow(window.name, -1);
 	    	
 	    },
@@ -86,16 +103,6 @@ function getEventsForDate(date) {
 		}
 	}
 	return numEvents;
-}
-
-function formatEventsText(events) {
-	var textToDisplay = events[0].type +  ': ' + events[0].title;
-   	if (events.length > 1) {
-   		for (i = 1; i < events.length; i++) {
-   			textToDisplay = textToDisplay.concat("\n" + events[i].type + ": " + events[i].title);
-   		}
-   	}
-   	return textToDisplay;
 }
 
 </script>
