@@ -2,6 +2,7 @@
     background-color: #5894e6 !important;
     background-image: none !important;
 }
-div.my-calendar-events {
-	white-space: pre;
+
+li.my-calendar-event {
+	list-style-type: none;
 }
