@@ -10,10 +10,17 @@
 
 <div class="my-calendar"></div>
 <h3 class="my-calendar-event-heading"></h3>
-<div class="my-calendar-events"></div>
+
+
+<script type='text/javascript' src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js'></script>
+<script class="my-calendar-event-template" type="text/x-jquery-tmpl">
+	<li class="my-calendar-event"> ${eventType}: {{if url}} <a href="${url}" target="_top">${eventTitle}</a> {{else}} ${eventTitle} {{/if}} </li>
+</script>
+<div class="my-calendar-events" />
 
 <!-- Wicket loads some pieces of data into this container which can be looked up by the Javascript -->
 <div class="my-calendar-data" wicket:id="data">This holds data</div>
+
 <script type="text/javascript">
 
 var siteId;
