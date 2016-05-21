@@ -23,6 +23,9 @@
 <script type="text/javascript">
 
 var siteId;
+var timeZone;
+var eventsList = [];
+
 $(document).ready(function() {
 	
 	// data
@@ -38,14 +41,7 @@ $(document).ready(function() {
 	});
 	
 	//get all events for the site
-	//TODO declare this
 	eventList = getEvents();
-
-	//setup todays events
-	todaysEvents = getEvents(new Date().toString());
-	
-	//TODO now show todays events
-	
 	
 	$(".my-calendar").datepicker({
 		beforeShowDay: function(date) {
@@ -58,36 +54,24 @@ $(document).ready(function() {
 	        } 
 	    },
 		onSelect: function(date) {
+						
+			// format the date
+			var formattedDate = getISO8601Date(date);
 			
-			events = getEvents(date);
-	    	 
-	    	 if (events.length > 0) {
-	    		 $(".my-calendar-events").text("");
-	    		 $(".my-calendar-event-heading").text(jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY")));
-				 var eventsDisplay = [];
-	    		 for (i = 0; i < events.length; i++) {
-	    			 if (events[i].assignmentId.length > 0) {
-	    				 jQuery.ajax({
-    		    		    url: "/direct/assignment/deepLink/" + siteId + "/" + events[i].assignmentId + ".json",
-    		    		    success: function (result) {
-    		    		        assignmentUrl = result.data.assignmentUrl;
-    		    		    },
-    		    		    async: false
-	    		    	}); 
-	    				 
-	    				eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title, url: assignmentUrl});
-	    			 }
-	    			 else {
-	    				eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title});
-	    			 }
-	    		 }
-		    	 $(".my-calendar-event-template").tmpl(eventsDisplay).appendTo(".my-calendar-events");
-	    	 } 
-	    	 else {
-	    		 $(".my-calendar-event-heading").text("");
-	    		 $(".my-calendar-events").text("");
-	    	 }
-	    	 setMainFrameHeightNow(window.name, -1);
+			// set heading
+			$(".my-calendar-event-heading").text(jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY")));
+			
+			// show the events
+			var selectedDayEvents = getEvents(formattedDate);
+			if (selectedDayEvents.length > 0) {
+				$(".my-calendar-events").text("");
+				var eventsDisplay = getEventsDisplay(selectedDayEvents);
+				$(".my-calendar-event-template").tmpl(eventsDisplay).appendTo(".my-calendar-events");
+			} else {
+	    		 $(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
+			}
+			
+			setMainFrameHeightNow(window.name, -1);
 	    	
 	    },
 	    onChangeMonthYear: function() {
@@ -97,11 +81,25 @@ $(document).ready(function() {
 	    // config
 	    showOtherMonths: true
 	});
+	
+	//show heading and events for initial day
+	//TODO this can be combined
+	var todaysEvents = getEvents(moment().format('YYYY-MM-DD'));
+	var eventsDisplay = getEventsDisplay(todaysEvents);
+	
+	$(".my-calendar-event-heading").text(jQuery.i18n.prop('event_heading_today'));
+	if (todaysEvents.length > 0) {
+		$(".my-calendar-events").text("");
+		var eventsDisplay = getEventsDisplay(todaysEvents);
+		$(".my-calendar-event-template").tmpl(eventsDisplay).appendTo(".my-calendar-events");
+	} else {
+		$(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
+	}
 });
 
 /**
  * Parse the event list and count the number of events that match the date
- * @param date Date()
+ * @param date from the datepicker, is in the format mm/dd/yyyy
  */
 function countEvents(date) {
 	var numEvents = 0;
@@ -115,15 +113,23 @@ function countEvents(date) {
 }
 
 /**
- * Get events for a given date
- * @param date string that datepicker sends
+ * Format a date into YYYY-MM-DD format.
+ * @param date from the datepicker, is in the format mm/dd/yyyy so we need to pick out the parts
+ */
+function getISO8601Date(date) {
+	return date.substring(6,10) + "-" + date.substring(0,2) + "-" + date.substring(3,5); //get date in YYYY-MM-DD
+}
+
+
+/**
+ * Get events for a given date in ISO8601 format 
+ * @param date YYYY-MM-DD format
  */
 function getEvents(date) {
 	 
 	var url = "/direct/calendar/site/" + siteId + ".json";
 	if(date) {
-		formattedDate = date.substring(6,10) + "-" + date.substring(0,2) + "-" + date.substring(3,5); //get date in YYYY-MM-DD
-		url += "?firstDate=" + formattedDate + "&lastDate=" + formattedDate;
+		url += "?firstDate=" + date + "&lastDate=" + date;
 	}
  	 
 	jQuery.ajax({
@@ -136,6 +142,34 @@ function getEvents(date) {
 	});
 	
 	return events;
+}
+
+/**
+ * Helper to turn a list of events into the display array ready for rendering by the template
+ * @param events array of events
+ *
+ * TODO this could be combined with getEvents?
+ */
+function getEventsDisplay(events) {
+	var eventsDisplay = [];
+	for (i = 0; i < events.length; i++) {
+		if (events[i].assignmentId.length > 0) {
+			jQuery.ajax({
+				url: "/direct/assignment/deepLink/" + siteId + "/" + events[i].assignmentId + ".json",
+				success: function (result) {
+				assignmentUrl = result.data.assignmentUrl;
+			},
+			async: false
+			}); 
+
+			eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title, url: assignmentUrl});
+		}
+		else {
+			eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title});
+		}
+	}
+	
+	return eventsDisplay;
 }
 
 </script>
