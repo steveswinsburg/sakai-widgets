@@ -6,19 +6,21 @@
 </head>     
 <body>
 
-<!-- TODO may need a way to namespace all of this, aka uPortal style? For now just look it up and assume one per page -->
+<!-- TODO may need a way to namespace all of this, aka uPortal style. By adding an element to the data div for namespace. For now just look it up and assume one per page -->
 
+<!-- data container, added as data- attributes -->
+<div class="my-calendar-data" wicket:id="data" />
+
+<!--  layout -->
 <div class="my-calendar"></div>
 <h3 class="my-calendar-event-heading"></h3>
+<div class="my-calendar-events"></div>
 
-
-<script class="my-calendar-event-template" type="text/x-jquery-tmpl">
-	<li class="my-calendar-event"> ${eventType}: {{if url}} <a href="${url}" target="_top">${eventTitle}</a> {{else}} ${eventTitle} {{/if}} </li>
+<!--  templates -->
+<script id="my-calendar-event-template" type="text/x-jsrender">
+	<li class="my-calendar-event"> {{:eventType}}: {{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </li>
 </script>
-<div class="my-calendar-events" />
 
-<!-- Wicket loads some pieces of data into this container which can be looked up by the Javascript -->
-<div class="my-calendar-data" wicket:id="data">This holds data</div>
 
 <script type="text/javascript">
 
@@ -66,7 +68,11 @@ $(document).ready(function() {
 			if (selectedDayEvents.length > 0) {
 				$(".my-calendar-events").text("");
 				var eventsDisplay = getEventsDisplay(selectedDayEvents);
-				$(".my-calendar-event-template").tmpl(eventsDisplay).appendTo(".my-calendar-events");
+				
+				var template = $.templates("#my-calendar-event-template");
+				var rendered = template.render(eventsDisplay);
+				$(".my-calendar-events").html(rendered);
+				
 			} else {
 	    		 $(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
 			}
@@ -90,8 +96,11 @@ $(document).ready(function() {
 	$(".my-calendar-event-heading").text(jQuery.i18n.prop('event_heading_today'));
 	if (todaysEvents.length > 0) {
 		$(".my-calendar-events").text("");
+		
 		var eventsDisplay = getEventsDisplay(todaysEvents);
-		$(".my-calendar-event-template").tmpl(eventsDisplay).appendTo(".my-calendar-events");
+		var template = $.templates("#my-calendar-event-template");
+		var rendered = template.render(eventsDisplay);
+		$(".my-calendar-events").html(rendered);
 	} else {
 		$(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
 	}
@@ -162,10 +171,10 @@ function getEventsDisplay(events) {
 			async: false
 			}); 
 
-			eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title, url: assignmentUrl});
+			eventsDisplay.push({"eventType": events[i].type, "eventTitle": events[i].title, "url": assignmentUrl});
 		}
 		else {
-			eventsDisplay.push({eventType: events[i].type, eventTitle: events[i].title});
+			eventsDisplay.push({"eventType": events[i].type, "eventTitle": events[i].title});
 		}
 	}
 	
