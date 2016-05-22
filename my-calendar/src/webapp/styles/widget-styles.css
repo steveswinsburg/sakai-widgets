@@ -6,3 +6,8 @@
 li.my-calendar-event {
 	list-style-type: none;
 }
+
+.ui-datepicker-current-day > a {
+	border: 1px solid #1d5e74 !important;
+	color: black !important;
+}
