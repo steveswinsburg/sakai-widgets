@@ -17,6 +17,7 @@ When in a user's my workspace, will show a rollup of all events in all sites. (T
 Currently requires Sakai 12, or backport these features:
 * https://jira.sakaiproject.org/browse/SAK-31206
 * https://jira.sakaiproject.org/browse/SAK-31220
+* https://jira.sakaiproject.org/browse/SAK-30728 (resovled in 11)
 
 
 ## Available configuration

@@ -81,5 +81,10 @@
 	<listener>
 		<listener-class>org.sakaiproject.util.SakaiContextLoaderListener</listener-class>
 	</listener>
+	
+	<mime-mapping> 
+    	<extension>properties</extension>
+    	<mime-type>text/plain</mime-type> 
+	</mime-mapping>
 
 </web-app>

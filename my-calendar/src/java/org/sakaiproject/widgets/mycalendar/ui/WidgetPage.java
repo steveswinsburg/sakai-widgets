@@ -80,6 +80,13 @@ public class WidgetPage extends WebPage {
 		response.render(
 				JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment-timezone-with-data.js?version=%s", version)));
 
+		// templating
+		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jsrender.min.js?version=%s", version)));
+
+		// i18n
+		response.render(
+				JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jquery.i18n.properties.min.js?version=%s", version)));
+
 		// widget specific styles
 		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/widget-styles.css?version=%s", version)));
 	}
