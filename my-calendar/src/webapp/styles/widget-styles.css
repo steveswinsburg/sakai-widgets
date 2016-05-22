@@ -11,3 +11,8 @@ li.my-calendar-event {
 	border: 1px solid #1d5e74 !important;
 	color: black !important;
 }
+
+.my-calendar-event-heading {
+	margin-left: 2px;
+	/* todo this should be centred, so should the datepicker */
+}

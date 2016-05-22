@@ -21,6 +21,14 @@
 	<li class="my-calendar-event"> {{:eventType}}: {{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </li>
 </script>
 
+<script id="my-calendar-heading-template" type="text/x-jsrender">
+	<h3>
+		<i class="fa fa-arrow-circle-o-left fa-lg" aria-hidden="true"></i>
+		{{:heading}}
+		<i class="fa fa-arrow-circle-o-right fa-lg" aria-hidden="true"></i>
+	</h3>
+</script>
+
 
 <script type="text/javascript">
 
@@ -61,7 +69,10 @@ $(document).ready(function() {
 			var formattedDate = getISO8601Date(date);
 			
 			// set heading
-			$(".my-calendar-event-heading").text(jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY")));
+			var headingTmpl = $.templates("#my-calendar-heading-template");
+			var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY"))};
+			var headingHtml = headingTmpl.render(headingText);
+			$(".my-calendar-event-heading").html(headingHtml);
 			
 			// show the events
 			var selectedDayEvents = getEvents(formattedDate);
@@ -93,14 +104,18 @@ $(document).ready(function() {
 	var todaysEvents = getEvents(moment().format('YYYY-MM-DD'));
 	var eventsDisplay = getEventsDisplay(todaysEvents);
 	
-	$(".my-calendar-event-heading").text(jQuery.i18n.prop('event_heading_today'));
+	var headingTmpl = $.templates("#my-calendar-heading-template");
+	var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
+	var headingHtml = headingTmpl.render(headingText);
+	$(".my-calendar-event-heading").html(headingHtml);
+	
 	if (todaysEvents.length > 0) {
 		$(".my-calendar-events").text("");
 		
 		var eventsDisplay = getEventsDisplay(todaysEvents);
-		var template = $.templates("#my-calendar-event-template");
-		var rendered = template.render(eventsDisplay);
-		$(".my-calendar-events").html(rendered);
+		var eventTmpl = $.templates("#my-calendar-event-template");
+		var eventHtml = eventTmpl.render(eventsDisplay);
+		$(".my-calendar-events").html(eventHtml);
 	} else {
 		$(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
 	}
