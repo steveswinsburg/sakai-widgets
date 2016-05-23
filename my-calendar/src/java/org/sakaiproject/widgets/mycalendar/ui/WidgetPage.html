@@ -23,9 +23,9 @@
 
 <script id="my-calendar-heading-template" type="text/x-jsrender">
 	<h3>
-		<i class="fa fa-arrow-circle-o-left fa-lg" aria-hidden="true"></i>
+		<i class="fa fa-arrow-circle-o-left fa-lg left-arrow" aria-hidden="true"></i>
 		{{:heading}}
-		<i class="fa fa-arrow-circle-o-right fa-lg" aria-hidden="true"></i>
+		<i class="fa fa-arrow-circle-o-right fa-lg right-arrow" aria-hidden="true"></i>
 	</h3>
 </script>
 
@@ -64,32 +64,11 @@ $(document).ready(function() {
 	        } 
 	    },
 		onSelect: function(date) {
-						
 			// format the date
 			var formattedDate = getISO8601Date(date);
 			
-			// set heading
-			var headingTmpl = $.templates("#my-calendar-heading-template");
-			var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY"))};
-			var headingHtml = headingTmpl.render(headingText);
-			$(".my-calendar-event-heading").html(headingHtml);
-			
-			// show the events
-			var selectedDayEvents = getEvents(formattedDate);
-			if (selectedDayEvents.length > 0) {
-				$(".my-calendar-events").text("");
-				var eventsDisplay = getEventsDisplay(selectedDayEvents);
-				
-				var template = $.templates("#my-calendar-event-template");
-				var rendered = template.render(eventsDisplay);
-				$(".my-calendar-events").html(rendered);
-				
-			} else {
-	    		 $(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
-			}
-			
-			setMainFrameHeightNow(window.name, -1);
-	    	
+			// display events
+			displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
 	    },
 	    onChangeMonthYear: function() {
 	    	$(".my-calendar-events").text("");
@@ -99,27 +78,65 @@ $(document).ready(function() {
 	    showOtherMonths: true
 	});
 	
-	//show heading and events for initial day
-	//TODO this can be combined
-	var todaysEvents = getEvents(moment().format('YYYY-MM-DD'));
-	var eventsDisplay = getEventsDisplay(todaysEvents);
-	
+	//show heading and events for today
+	displayEvents(moment().format('YYYY-MM-DD'), true);
+
+});
+
+//change the day when arrow buttons are selected
+$(document).on("click", '.left-arrow', function () {
+	var date = $('.my-calendar').datepicker('getDate');
+    var newDate = date.getTime() - (1000*60*60*24);
+    var formattedDate = moment(newDate).format('YYYY-MM-DD');
+    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+    date.setTime(newDate);
+    $('.my-calendar').datepicker("setDate", date);
+});
+
+$(document).on("click", '.right-arrow', function () {
+	var date = $('.my-calendar').datepicker('getDate');
+    var newDate = date.getTime() + (1000*60*60*24);
+    var formattedDate = moment(newDate).format('YYYY-MM-DD');
+    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+    date.setTime(newDate);
+    $('.my-calendar').datepicker("setDate", date);
+});
+
+/**
+ * Get the events for the selected day, parse and display below the calendar
+ * @param formattedDate YYYY-MM-DD
+ * @param today true or false
+ */
+function displayEvents(formattedDate, today) {
+	// set heading
 	var headingTmpl = $.templates("#my-calendar-heading-template");
-	var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
+	
+	if (today) {
+		var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
+	} else {
+		var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY"))};
+	}
+	
 	var headingHtml = headingTmpl.render(headingText);
 	$(".my-calendar-event-heading").html(headingHtml);
 	
-	if (todaysEvents.length > 0) {
+	// show the events
+	var selectedDayEvents = getEvents(formattedDate);
+	if (selectedDayEvents.length > 0) {
 		$(".my-calendar-events").text("");
+		var eventsDisplay = getEventsDisplay(selectedDayEvents);
 		
-		var eventsDisplay = getEventsDisplay(todaysEvents);
-		var eventTmpl = $.templates("#my-calendar-event-template");
-		var eventHtml = eventTmpl.render(eventsDisplay);
-		$(".my-calendar-events").html(eventHtml);
+		var template = $.templates("#my-calendar-event-template");
+		var rendered = template.render(eventsDisplay);
+		$(".my-calendar-events").html(rendered);
+		
 	} else {
-		$(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
+		 $(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
 	}
-});
+	
+	setMainFrameHeightNow(window.name, -1);
+};
+
 
 /**
  * Parse the event list and count the number of events that match the date
