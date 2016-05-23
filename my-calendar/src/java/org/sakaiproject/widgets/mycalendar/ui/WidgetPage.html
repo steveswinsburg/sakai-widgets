@@ -32,14 +32,14 @@
 
 <script type="text/javascript">
 
-var siteId;
+var currentSiteId;
 var timeZone;
 var eventsList = [];
 
 $(document).ready(function() {
 	
 	// data
-	siteId = $(".my-calendar-data").attr("data-siteid");
+	currentSiteId = $(".my-calendar-data").attr("data-siteid");
 	timeZone = $(".my-calendar-data").attr("data-tz");
 	
 	// i18n
@@ -150,16 +150,22 @@ function getISO8601Date(date) {
  * @param date YYYY-MM-DD format
  */
 function getEvents(date) {
-	 
-	var url = "/direct/calendar/site/" + siteId + ".json";
+	
+	// test for myworkspace (site starting with ~) to handle different call
+	var url;
+	if (currentSiteId.startsWith("~")) {
+		url = "/direct/calendar/my.json"
+	} else {
+		url = "/direct/calendar/site/" + currentSiteId + ".json";
+	}
 	if(date) {
 		url += "?firstDate=" + date + "&lastDate=" + date;
 	}
- 	 
+ 	
+	var events = [];
 	jQuery.ajax({
 		url: url,
 		success: function (result) {
-			//TODO declare this
 			events = result.calendar_collection;
 		},
 		async: false
@@ -171,15 +177,13 @@ function getEvents(date) {
 /**
  * Helper to turn a list of events into the display array ready for rendering by the template
  * @param events array of events
- *
- * TODO this could be combined with getEvents?
  */
 function getEventsDisplay(events) {
 	var eventsDisplay = [];
 	for (i = 0; i < events.length; i++) {
 		if (events[i].assignmentId.length > 0) {
 			jQuery.ajax({
-				url: "/direct/assignment/deepLink/" + siteId + "/" + events[i].assignmentId + ".json",
+				url: "/direct/assignment/deepLink/" + events[i].siteId + "/" + events[i].assignmentId + ".json",
 				success: function (result) {
 				assignmentUrl = result.data.assignmentUrl;
 			},
