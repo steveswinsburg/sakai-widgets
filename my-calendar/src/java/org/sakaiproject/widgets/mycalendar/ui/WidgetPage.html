@@ -72,7 +72,7 @@ $(document).ready(function() {
 	    },
 	    onChangeMonthYear: function() {
 	    	$(".my-calendar-events").text("");
-	    	$(".my-calendar-event-heading").text("");
+	    	$(".my-calendar-event-heading").text(headingTmpl.render(""));
 	    },
 	    // config
 	    showOtherMonths: true
@@ -80,11 +80,34 @@ $(document).ready(function() {
 	
 	//show heading and events for today
 	displayEvents(moment().format('YYYY-MM-DD'), true);
-
 	
+	
+	//change the day when arrow buttons are selected
+	$(".fa-arrow-circle-o-left").click(function() {
+	    var date = $('.my-calendar').datepicker('getDate');
+	    var newDate = date.getTime() - (1000*60*60*24);
+	    var formattedDate = moment(newDate).format('YYYY-MM-DD');
+	    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+	    date.setTime(newDate);
+	    $('.my-calendar').datepicker("setDate", date);
+	});
+	
+	$(".fa-arrow-circle-o-right").click(function() {
+	    var date = $('.my-calendar').datepicker('getDate');
+	    var newDate = date.getTime() + (1000*60*60*24);
+	    var formattedDate = moment(newDate).format('YYYY-MM-DD');
+	    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+	    date.setTime(newDate);
+	    $('.my-calendar').datepicker("setDate", date);
+	});
+
 });
 
-
+/**
+ * Get the events for the selected day, parse and display below the calendar
+ * @param formattedDate YYYY-MM-DD
+ * @param today true or false
+ */
 function displayEvents(formattedDate, today) {
 	// set heading
 	var headingTmpl = $.templates("#my-calendar-heading-template");
