@@ -23,9 +23,9 @@
 
 <script id="my-calendar-heading-template" type="text/x-jsrender">
 	<h3>
-		<i class="fa fa-arrow-circle-o-left fa-lg" aria-hidden="true"></i>
+		<i class="fa fa-arrow-circle-o-left fa-lg left-arrow" aria-hidden="true"></i>
 		{{:heading}}
-		<i class="fa fa-arrow-circle-o-right fa-lg" aria-hidden="true"></i>
+		<i class="fa fa-arrow-circle-o-right fa-lg right-arrow" aria-hidden="true"></i>
 	</h3>
 </script>
 
@@ -80,27 +80,26 @@ $(document).ready(function() {
 	
 	//show heading and events for today
 	displayEvents(moment().format('YYYY-MM-DD'), true);
-	
-	
-	//change the day when arrow buttons are selected
-	$(".fa-arrow-circle-o-left").click(function() {
-	    var date = $('.my-calendar').datepicker('getDate');
-	    var newDate = date.getTime() - (1000*60*60*24);
-	    var formattedDate = moment(newDate).format('YYYY-MM-DD');
-	    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
-	    date.setTime(newDate);
-	    $('.my-calendar').datepicker("setDate", date);
-	});
-	
-	$(".fa-arrow-circle-o-right").click(function() {
-	    var date = $('.my-calendar').datepicker('getDate');
-	    var newDate = date.getTime() + (1000*60*60*24);
-	    var formattedDate = moment(newDate).format('YYYY-MM-DD');
-	    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
-	    date.setTime(newDate);
-	    $('.my-calendar').datepicker("setDate", date);
-	});
 
+});
+
+//change the day when arrow buttons are selected
+$(document).on("click", '.left-arrow', function () {
+	var date = $('.my-calendar').datepicker('getDate');
+    var newDate = date.getTime() - (1000*60*60*24);
+    var formattedDate = moment(newDate).format('YYYY-MM-DD');
+    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+    date.setTime(newDate);
+    $('.my-calendar').datepicker("setDate", date);
+});
+
+$(document).on("click", '.right-arrow', function () {
+	var date = $('.my-calendar').datepicker('getDate');
+    var newDate = date.getTime() + (1000*60*60*24);
+    var formattedDate = moment(newDate).format('YYYY-MM-DD');
+    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+    date.setTime(newDate);
+    $('.my-calendar').datepicker("setDate", date);
 });
 
 /**
