@@ -16,3 +16,7 @@ li.my-calendar-event {
 	margin-left: 2px;
 	/* todo this should be centred, so should the datepicker */
 }
+
+.left-arrow, .right-arrow {
+	cursor: pointer;
+}
