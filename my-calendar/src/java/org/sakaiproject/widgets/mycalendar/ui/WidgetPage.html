@@ -68,7 +68,7 @@ $(document).ready(function() {
 			var formattedDate = getISO8601Date(date);
 			
 			// display events
-			displayEvents(formattedDate);
+			displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
 	    },
 	    onChangeMonthYear: function() {
 	    	$(".my-calendar-events").text("");
@@ -78,37 +78,23 @@ $(document).ready(function() {
 	    showOtherMonths: true
 	});
 	
-	//show heading and events for initial day
-	//TODO this can be combined
-	var todaysEvents = getEvents(moment().format('YYYY-MM-DD'));
-	var eventsDisplay = getEventsDisplay(todaysEvents);
-	
-	var headingTmpl = $.templates("#my-calendar-heading-template");
-	var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
-	var headingHtml = headingTmpl.render(headingText);
-	$(".my-calendar-event-heading").html(headingHtml);
-	
-	if (todaysEvents.length > 0) {
-		$(".my-calendar-events").text("");
-		
-		var eventsDisplay = getEventsDisplay(todaysEvents);
-		var eventTmpl = $.templates("#my-calendar-event-template");
-		var eventHtml = eventTmpl.render(eventsDisplay);
-		$(".my-calendar-events").html(eventHtml);
-	} else {
-		$(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
-	}
+	//show heading and events for today
+	displayEvents(moment().format('YYYY-MM-DD'), true);
+
 	
 });
 
 
-function displayEvents(formattedDate) {
+function displayEvents(formattedDate, today) {
 	// set heading
 	var headingTmpl = $.templates("#my-calendar-heading-template");
-	// TODO
-	// if its today, use
-	// var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
-	var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY"))};
+	
+	if (today) {
+		var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
+	} else {
+		var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY"))};
+	}
+	
 	var headingHtml = headingTmpl.render(headingText);
 	$(".my-calendar-event-heading").html(headingHtml);
 	
@@ -127,7 +113,6 @@ function displayEvents(formattedDate) {
 	}
 	
 	setMainFrameHeightNow(window.name, -1);
-
 };
 
 
