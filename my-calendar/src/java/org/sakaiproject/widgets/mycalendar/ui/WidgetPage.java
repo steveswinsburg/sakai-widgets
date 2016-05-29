@@ -2,6 +2,7 @@
 package org.sakaiproject.widgets.mycalendar.ui;
 
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,6 +53,7 @@ public class WidgetPage extends WebPage {
 		final Label data = new Label("data");
 		data.add(new AttributeAppender("data-siteid", getCurrentSiteId()));
 		data.add(new AttributeAppender("data-tz", getUserTimeZone().getID()));
+		data.add(new AttributeAppender("data-namespace", getNamespace()));
 
 		add(data);
 	}
@@ -133,6 +135,14 @@ public class WidgetPage extends WebPage {
 		}
 
 		return timezone;
+	}
+	
+	/**
+	 * Get a UUID with dashes removed that we can use as a namespace
+	 * @return
+	 */
+	private String getNamespace() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
 }
