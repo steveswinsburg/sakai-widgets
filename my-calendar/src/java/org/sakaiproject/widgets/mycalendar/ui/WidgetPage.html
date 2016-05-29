@@ -50,8 +50,9 @@ $(document).ready(function() {
 	    cache: true
 	});
 	
-	//get all events for the site
-	eventList = getEvents();
+	//get all events for the site for this month
+	var todaysDate = moment().format('YYYY-MM-DD');
+	eventList = getEvents(todaysDate);
 	
 	$(".my-calendar").datepicker({
 		beforeShowDay: function(date) {
@@ -70,7 +71,8 @@ $(document).ready(function() {
 			// display events
 			displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
 	    },
-	    onChangeMonthYear: function() {
+	    onChangeMonthYear: function(year, month) {
+	    	eventList = getEvents(year + "-" + (month > 9 ? month : "0" + month) + "-01");
 	    	$(".my-calendar-events").text("");
 	    	$(".my-calendar-event-heading").text("");
 	    },
@@ -121,7 +123,7 @@ function displayEvents(formattedDate, today) {
 	$(".my-calendar-event-heading").html(headingHtml);
 	
 	// show the events
-	var selectedDayEvents = getEvents(formattedDate);
+	var selectedDayEvents = getEvents(formattedDate, true);
 	if (selectedDayEvents.length > 0) {
 		$(".my-calendar-events").text("");
 		var eventsDisplay = getEventsDisplay(selectedDayEvents);
@@ -165,8 +167,9 @@ function getISO8601Date(date) {
 /**
  * Get events for a given date in ISO8601 format 
  * @param date YYYY-MM-DD format
+ * @param singleDay boolean to specify whether to fetch events for the whole month or just a single day
  */
-function getEvents(date) {
+function getEvents(date, singleDay) {
 	
 	// test for myworkspace (site starting with ~) to handle different call
 	var url;
@@ -175,8 +178,13 @@ function getEvents(date) {
 	} else {
 		url = "/direct/calendar/site/" + currentSiteId + ".json";
 	}
-	if(date) {
+	if(singleDay) {
 		url += "?firstDate=" + date + "&lastDate=" + date;
+	}
+	else {
+		var startDate = date.substring(0,4) + "-" + date.substring(5,7) + "-01";
+		var endDate = date.substring(0,4) + "-" + date.substring(5,7) + "-31";
+		url += "?firstDate=" + startDate + "&lastDate=" + endDate;
 	}
  	
 	var events = [];
