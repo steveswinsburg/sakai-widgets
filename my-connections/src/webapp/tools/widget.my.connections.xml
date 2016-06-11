@@ -5,11 +5,16 @@
     	title="My Connections"
         description="A widget that shows a user's connections">
     	
-    	<!--<category name="myworkspace" /> -->
+    	<category name="myworkspace" />
+    	<category name="project" />
+    	<category name="course" />
 		
 		<configuration name="reset.button" value="false" />
 		<configuration name="help.button" value="false" />
 		<configuration name="sakai:tool-directurl-enabled" value="false" />
+		
+		<configuration name="renderInline" value="true" />
+		<configuration name="suppressTitle" value="true" />
 
 	</tool>
 </registration>
