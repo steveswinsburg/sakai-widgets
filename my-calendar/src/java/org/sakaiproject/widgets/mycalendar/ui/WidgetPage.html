@@ -18,14 +18,16 @@
 
 <!--  templates -->
 <script id="my-calendar-event-template" type="text/x-jsrender">
-	<li class="my-calendar-event"> 
-		<span class="my-calendar-event-time"> {{:eventTime}} </span>
-	 	<span class="my-calendar-event-type"> {{:eventType}} </span>
-		<br>
-		<span class="my-calendar-event-title"> 
-			{{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}}
-		</span>
-	</li>
+	<table class="my-calendar-event"> 
+		<tr> 
+			<td class="my-calendar-event-time"> {{:eventTime}} </td>
+			<td class="my-calendar-event-type"> {{:eventType}} </td>
+		</tr>
+		<tr> 
+			<td></td>
+			<td> {{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </td>
+		</tr>
+	</table>
 
 </script>
 
@@ -229,7 +231,6 @@ function getEventsDisplay(events) {
 			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title});
 		}
 	}
-	
 	return eventsDisplay;
 }
 

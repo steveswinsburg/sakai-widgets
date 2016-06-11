@@ -20,3 +20,15 @@ li.my-calendar-event {
 .left-arrow, .right-arrow {
 	cursor: pointer;
 }
+
+.my-calendar-event {
+	margin-bottom: 15px;
+}
+
+.my-calendar-event-time {
+	width: 80px;
+}
+
+.my-calendar-event-type {
+	font-weight: bold;
+}
