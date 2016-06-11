@@ -25,7 +25,7 @@
 		</tr>
 		<tr> 
 			<td></td>
-			<td> {{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </td>
+			<td> {{if eventUrl}} <a href="{{:eventUrl}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </td>
 		</tr>
 		<tr> 
 			<td></td>
@@ -217,26 +217,39 @@ function getEvents(date, singleDay) {
  * @param events array of events
  */
 function getEventsDisplay(events) {
-	var eventsDisplay = [], time;
+	
+	var eventsDisplay = [];
+	var time;
+	var eventUrl;
+	var samigoRegex = /(http)(s)?(:\/\/)(\w)+(:)?(\d)*(\/samigo-app\/servlet\/Login\?id=\w*)/g;
+	
 	for (i = 0; i < events.length; i++) {
 		
 		// get the event time (need to use millisecond value as the display value can differ in format)
-		var time = moment(events[i].firstTime.time).format("h:mm a");
-		
-		// deeplink for assignments
+		time = moment(events[i].firstTime.time).format("h:mm a");
+				
+		// assignments deeplink
 		if (events[i].assignmentId.length > 0) {
 			jQuery.ajax({
 				url: "/direct/assignment/deepLink/" + events[i].siteId + "/" + events[i].assignmentId + ".json",
 				success: function (result) {
-				assignmentUrl = result.data.assignmentUrl;
-			},
-			async: false
+					eventUrl = result.data.assignmentUrl;
+				},
+				async: false
 			}); 
-			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "url": assignmentUrl, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
 		}
-		else {
-			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
+		
+		// samigo 'deeplink'
+		// extract the URL from the description
+		if (events[i].descriptionFormatted.length > 0) {
+			var matches = samigoRegex.exec(events[i].descriptionFormatted);
+			if(matches && matches.length > 0) {
+				eventUrl = matches[0]
+			}
 		}
+		
+		//add the event to the list
+		eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "eventUrl": eventUrl, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
 	}
 	return eventsDisplay;
 }
