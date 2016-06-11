@@ -213,7 +213,7 @@ function getEvents(date, singleDay) {
 function getEventsDisplay(events) {
 	var eventsDisplay = [], time;
 	for (i = 0; i < events.length; i++) {
-		time = events[i].firstTime.display.substring(12, 20).trim();
+		time = events[i].firstTime.display.substring(12, 21).trim();
 		if (events[i].assignmentId.length > 0) {
 			jQuery.ajax({
 				url: "/direct/assignment/deepLink/" + events[i].siteId + "/" + events[i].assignmentId + ".json",
