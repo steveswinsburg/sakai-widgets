@@ -27,6 +27,10 @@
 			<td></td>
 			<td> {{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </td>
 		</tr>
+		<tr> 
+			<td></td>
+			<td> <a href="{{:siteUrl}}" target="_top">{{:siteName}}</a> </td>
+		</tr>
 	</table>
 
 </script>
@@ -224,11 +228,10 @@ function getEventsDisplay(events) {
 			},
 			async: false
 			}); 
-
-			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "url": assignmentUrl});
+			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "url": assignmentUrl, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
 		}
 		else {
-			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title});
+			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
 		}
 	}
 	return eventsDisplay;
