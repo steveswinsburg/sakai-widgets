@@ -20,6 +20,7 @@ Currently requires Sakai 12, or backport these features:
 * ~~https://jira.sakaiproject.org/browse/SAK-30728~~ (already resolved in 11)
 * ~~https://jira.sakaiproject.org/browse/SAK-30729~~ (already resolved in 11)
 * https://jira.sakaiproject.org/browse/SAK-31247
+* https://jira.sakaiproject.org/browse/SAK-31352
 
 
 ## Available configuration
