@@ -179,7 +179,7 @@ function getEvents(date, singleDay) {
 		url = "/direct/calendar/site/" + currentSiteId + ".json";
 	}
 	if(singleDay) {
-		url += "?firstDate=" + date + "&lastDate=" + date;
+		url += "?firstDate=" + date + "&lastDate=" + date + "&detailed=true";
 	}
 	else {
 		var startDate = date.substring(0,4) + "-" + date.substring(5,7) + "-01";
