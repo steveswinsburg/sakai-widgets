@@ -4,6 +4,7 @@ package org.sakaiproject.widgets.myconnections.ui.components;
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -40,15 +41,22 @@ public class ConnectionsGrid extends Panel {
 			protected void populateItem(final Item<BasicConnection> item) {
 				final BasicConnection connection = item.getModelObject();
 				final ProfileThumbnail img = new ProfileThumbnail("img", Model.of(connection.getUuid()));
-				img.add(new AttributeModifier("href", "/direct/my/profile-view/" + connection.getUuid()));
+				
+				final String url = "/direct/my/profile-view/" + connection.getUuid();
+				
+				img.add(new AttributeModifier("href", url));
 				img.add(new AttributeModifier("target", "_top"));
-				img.add(new AttributeModifier("title", connection.getDisplayName()));
+				//img.add(new AttributeModifier("title", connection.getDisplayName()));
 				item.add(img);
+				
+				//name link
+				item.add(new ExternalLink("name", url, connection.getDisplayName()));
 			}
 
 			@Override
 			protected void populateEmptyItem(final Item<BasicConnection> item) {
 				item.add(new EmptyPanel("img"));
+				item.add(new EmptyPanel("name"));
 				item.setVisible(false);
 			}
 		};
