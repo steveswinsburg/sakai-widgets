@@ -18,7 +18,21 @@
 
 <!--  templates -->
 <script id="my-calendar-event-template" type="text/x-jsrender">
-	<li class="my-calendar-event"> {{:eventType}}: {{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </li>
+	<table class="my-calendar-event"> 
+		<tr> 
+			<td class="my-calendar-event-time"> {{:eventTime}} </td>
+			<td class="my-calendar-event-type"> {{:eventType}} </td>
+		</tr>
+		<tr> 
+			<td></td>
+			<td> {{if url}} <a href="{{:url}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </td>
+		</tr>
+		<tr> 
+			<td></td>
+			<td> <a href="{{:siteUrl}}" target="_top">{{:siteName}}</a> </td>
+		</tr>
+	</table>
+
 </script>
 
 <script id="my-calendar-heading-template" type="text/x-jsrender">
@@ -195,7 +209,6 @@ function getEvents(date, singleDay) {
 		},
 		async: false
 	});
-	
 	return events;
 }
 
@@ -204,8 +217,9 @@ function getEvents(date, singleDay) {
  * @param events array of events
  */
 function getEventsDisplay(events) {
-	var eventsDisplay = [];
+	var eventsDisplay = [], time;
 	for (i = 0; i < events.length; i++) {
+		time = events[i].firstTime.display.substring(12, 21).trim();
 		if (events[i].assignmentId.length > 0) {
 			jQuery.ajax({
 				url: "/direct/assignment/deepLink/" + events[i].siteId + "/" + events[i].assignmentId + ".json",
@@ -214,14 +228,12 @@ function getEventsDisplay(events) {
 			},
 			async: false
 			}); 
-
-			eventsDisplay.push({"eventType": events[i].type, "eventTitle": events[i].title, "url": assignmentUrl});
+			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "url": assignmentUrl, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
 		}
 		else {
-			eventsDisplay.push({"eventType": events[i].type, "eventTitle": events[i].title});
+			eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
 		}
 	}
-	
 	return eventsDisplay;
 }
 
