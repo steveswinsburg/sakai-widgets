@@ -219,7 +219,11 @@ function getEvents(date, singleDay) {
 function getEventsDisplay(events) {
 	var eventsDisplay = [], time;
 	for (i = 0; i < events.length; i++) {
-		time = events[i].firstTime.display.substring(12, 21).trim();
+		
+		// get the event time (need to use millisecond value as the display value can differ in format)
+		var time = moment(events[i].firstTime.time).format("h:mm a");
+		
+		// deeplink for assignments
 		if (events[i].assignmentId.length > 0) {
 			jQuery.ajax({
 				url: "/direct/assignment/deepLink/" + events[i].siteId + "/" + events[i].assignmentId + ".json",
