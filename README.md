@@ -15,8 +15,7 @@ When placed in a site will show the events for a site.
 When in a user's my workspace, will show a rollup of all events in all sites.
 
 ### Site Information
-A better `Site Information Display`
-Pulls the data from Site Info and dispalys it in an unobtrusive, collapsible view
+A better Site Information Display. Pulls the data from Site Info and displays it in an unobtrusive, (soon to be) collapsible view.
 
 
 Currently requires Sakai 12, or backport these features:
