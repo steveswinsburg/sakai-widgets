@@ -47,6 +47,7 @@
 		<module>my-calendar</module>
 		<module>my-connections</module>
 		<module>site-members</module>
+		<module>site-information</module>
 	</modules>
 	<build>
 		<plugins>

@@ -12,7 +12,12 @@ Shows the instructors, TAs and site members for a site.
 
 ### My Calendar
 When placed in a site will show the events for a site.
-When in a user's my workspace, will show a rollup of all events in all sites. (TODO)
+When in a user's my workspace, will show a rollup of all events in all sites.
+
+### Site Information
+A better `Site Information Display`
+Pulls the data from Site Info and dispalys it in an unobtrusive, collapsible view
+
 
 Currently requires Sakai 12, or backport these features:
 * https://jira.sakaiproject.org/browse/SAK-31206
