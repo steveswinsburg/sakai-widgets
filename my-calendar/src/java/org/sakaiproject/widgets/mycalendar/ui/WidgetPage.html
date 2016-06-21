@@ -219,9 +219,6 @@ function getEvents(date, singleDay) {
 function getEventsDisplay(events) {
 	
 	var eventsDisplay = [];
-	var time;
-	var eventUrl;
-	var target;
 	var regexps = [
 	  /* Samigo */
 	  /http(s)?:\/\/[A-Za-z0-9:_.-]+(\/samigo-app\/servlet\/Login\?id=\w*)/ ,
@@ -234,19 +231,19 @@ function getEventsDisplay(events) {
 	var nRegexps = regexps.length;
 	
 	for (var i = 0; i < events.length; i++) {
-		
+
 		// loop event
-		var event = events[i];
-		
+		var evnt = events[i];
+
 		// get the event time (need to use millisecond value as the display value can differ in format)
-		time = moment(event.firstTime.time).format("h:mm a");
+		var time = moment(evnt.firstTime.time).format("h:mm a");
 				
-		eventUrl = undefined;
-		target = undefined;
+		var eventUrl = undefined;
+		var target = undefined;
 		// assignments deeplink
-		if (event.assignmentId.length > 0) {
+		if (evnt.assignmentId.length > 0) {
 			jQuery.ajax({
-				url: "/direct/assignment/deepLink/" + event.siteId + "/" + event.assignmentId + ".json",
+				url: "/direct/assignment/deepLink/" + evnt.siteId + "/" + evnt.assignmentId + ".json",
 				success: function (result) {
 					eventUrl = result.data.assignmentUrl;
 					target = "_top";
@@ -257,7 +254,7 @@ function getEventsDisplay(events) {
 		
 		// samigo 'deeplink' or eSyncTraining meeting link
 		// extract the URL from the description
-		var ed = event.descriptionFormatted;
+		var ed = evnt.descriptionFormatted;
 		if (ed.length > 0) {
 			for(var j = 0; j<nRegexps; j++) {
 				var reg = regexps[j];
@@ -271,8 +268,8 @@ function getEventsDisplay(events) {
 		}
 		
 		//add the event to the list
-		eventsDisplay.push({"eventTime": time, "eventType": event.type, "eventTitle": event.title, "eventUrl": eventUrl, "target": target,
-			"siteName": event.siteName, "siteUrl": "/portal/site/" + currentSiteId});
+		eventsDisplay.push({"eventTime": time, "eventType": evnt.type, "eventTitle": evnt.title, "eventUrl": eventUrl, "target": target,
+			"siteName": evnt.siteName, "siteUrl": "/portal/site/" + evnt.siteId});
 	}
 	return eventsDisplay;
 }
