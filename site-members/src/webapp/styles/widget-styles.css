@@ -15,3 +15,25 @@
 	width: 160px;
 	padding-top: 20px;
 }
+
+div.Mrphs-widget-site-members>nav.Mrphs-toolTitleNav {
+	border: 1px solid #e0e0e0;
+	background-color: #f0f0f0;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+div.Mrphs-widget-site-members>nav.Mrphs-toolTitleNav>h2.Mrphs-toolTitleNav__title {
+	color: #333;
+	font-weight: bold;
+	font-size: 1em;
+}
+
+div.Mrphs-widget-site-members>div.Mrphs-toolBody--widget-site-members>h3 {
+	text-align: center;
+}
+
+div.Mrphs-widget-site-members>div.Mrphs-toolBody--widget-site-members>div>table {
+	margin: 0px auto;
+}
+

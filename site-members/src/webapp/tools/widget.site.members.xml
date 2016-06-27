@@ -13,7 +13,7 @@
 		<configuration name="sakai:tool-directurl-enabled" value="false" />
 		
 		<configuration name="renderInline" value="true" />
-		<configuration name="suppressTitle" value="true" />
+		<configuration name="suppressTitle" value="false" />
 
 	</tool>
 </registration>
