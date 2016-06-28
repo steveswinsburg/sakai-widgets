@@ -13,8 +13,8 @@ li.my-calendar-event {
 }
 
 .my-calendar-event-heading {
+	text-size: 0.85em;
 	margin-left: 2px;
-	/* todo this should be centred, so should the datepicker */
 }
 
 .left-arrow, .right-arrow {
@@ -32,3 +32,27 @@ li.my-calendar-event {
 .my-calendar-event-type {
 	font-weight: bold;
 }
+
+div.ui-datepicker-inline {
+	width: 80%;
+	margin: 0px auto;
+}
+
+h3.my-calendar-event-heading {
+	text-align: center;
+	color: #777;
+}
+
+div.my-calendar-events-div {
+	margin-bottom: 9px
+}
+
+table.my-calendar-events {
+	margin: 0px auto;
+}
+
+table.my-calendar-event {
+	margin: 0 auto;
+	text-align: left;
+}
+

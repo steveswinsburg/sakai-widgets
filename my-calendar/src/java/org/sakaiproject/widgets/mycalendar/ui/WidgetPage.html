@@ -14,11 +14,13 @@
 <!--  layout -->
 <div class="my-calendar"></div>
 <h3 class="my-calendar-event-heading"></h3>
-<div class="my-calendar-events"></div>
+<div class="my-calendar-events-div">
+	<table class="my-calendar-events"> 
+	</table>
+</div>
 
 <!--  templates -->
 <script id="my-calendar-event-template" type="text/x-jsrender">
-	<table class="my-calendar-event"> 
 		<tr> 
 			<td class="my-calendar-event-time"> {{:eventTime}} </td>
 			<td class="my-calendar-event-type"> {{:eventType}} </td>
@@ -31,8 +33,6 @@
 			<td></td>
 			<td> (<a href="{{:siteUrl}}" target="_top">{{:siteName}}</a>) </td>
 		</tr>
-	</table>
-
 </script>
 
 <script id="my-calendar-heading-template" type="text/x-jsrender">
@@ -51,6 +51,7 @@ var timeZone;
 var eventsList = [];
 
 $(document).ready(function() {
+    moment.locale(sakai.locale.userLocale);
 	
 	// data
 	currentSiteId = $(".my-calendar-data").attr("data-siteid");
@@ -91,7 +92,13 @@ $(document).ready(function() {
 	    	$(".my-calendar-event-heading").text("");
 	    },
 	    // config
-	    showOtherMonths: true
+	    showOtherMonths: true,
+	    // Get localized names for things
+	    monthNames: moment.months(),
+	    monthNamesShort: moment.monthsShort(),
+	    dayNames: moment.weekdays(),
+	    dayNamesShort: moment.weekdaysShort(),
+	    dayNamesMin: moment.weekdaysMin()
 	});
 	
 	//show heading and events for today
@@ -130,7 +137,7 @@ function displayEvents(formattedDate, today) {
 	if (today) {
 		var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
 	} else {
-		var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY"))};
+		var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("LL"))};
 	}
 	
 	var headingHtml = headingTmpl.render(headingText);
@@ -147,7 +154,7 @@ function displayEvents(formattedDate, today) {
 		$(".my-calendar-events").html(rendered);
 		
 	} else {
-		 $(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
+		 $(".my-calendar-events").html("<tr><td>"+jQuery.i18n.prop('no_events')+"</td></tr>");
 	}
 	
 	setMainFrameHeightNow(window.name, -1);
@@ -236,7 +243,7 @@ function getEventsDisplay(events) {
 		var evnt = events[i];
 
 		// get the event time (need to use millisecond value as the display value can differ in format)
-		var time = moment(evnt.firstTime.time).format("h:mm a");
+		var time = moment(evnt.firstTime.time).format("LT");
 				
 		var eventUrl = undefined;
 		var target = undefined;
