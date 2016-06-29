@@ -225,13 +225,16 @@ function getEventsDisplay(events) {
 	
 	for (i = 0; i < events.length; i++) {
 		
+		// loop event
+		var event = events[i];
+		
 		// get the event time (need to use millisecond value as the display value can differ in format)
-		time = moment(events[i].firstTime.time).format("h:mm a");
+		time = moment(event.firstTime.time).format("h:mm a");
 				
 		// assignments deeplink
-		if (events[i].assignmentId.length > 0) {
+		if (event.assignmentId.length > 0) {
 			jQuery.ajax({
-				url: "/direct/assignment/deepLink/" + events[i].siteId + "/" + events[i].assignmentId + ".json",
+				url: "/direct/assignment/deepLink/" + event.siteId + "/" + event.assignmentId + ".json",
 				success: function (result) {
 					eventUrl = result.data.assignmentUrl;
 				},
@@ -241,15 +244,15 @@ function getEventsDisplay(events) {
 		
 		// samigo 'deeplink'
 		// extract the URL from the description
-		if (events[i].descriptionFormatted.length > 0) {
-			var matches = samigoRegex.exec(events[i].descriptionFormatted);
+		if (event.descriptionFormatted.length > 0) {
+			var matches = samigoRegex.exec(event.descriptionFormatted);
 			if(matches && matches.length > 0) {
-				eventUrl = matches[0]
+				eventUrl = matches[0];
 			}
 		}
 		
 		//add the event to the list
-		eventsDisplay.push({"eventTime": time, "eventType": events[i].type, "eventTitle": events[i].title, "eventUrl": eventUrl, "siteName": events[i].siteName, "siteUrl": "/portal/site/" + currentSiteId});
+		eventsDisplay.push({"eventTime": time, "eventType": event.type, "eventTitle": event.title, "eventUrl": eventUrl, "siteName": event.siteName, "siteUrl": "/portal/site/" + event.siteId});
 	}
 	return eventsDisplay;
 }
