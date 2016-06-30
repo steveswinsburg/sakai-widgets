@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <registration>
-	<tool id="widget.my.connections"
+	<tool id="sakai.widget.my.connections"
     	title="My Connections"
         description="A widget that shows a user's connections">
     	

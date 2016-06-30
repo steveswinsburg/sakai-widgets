@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <registration>
-	<tool id="widget.site.members"
+	<tool id="sakai.widget.site.members"
     	title="Site Members"
         description="A widget that shows the members of the site">
     	

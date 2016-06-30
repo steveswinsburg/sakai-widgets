@@ -3,11 +3,11 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 version="2.5">
 
-	<display-name>widget.my.connections</display-name>
+	<display-name>sakai.widget.my.connections</display-name>
 
 	<!--  This application's servlet class -->
 	<servlet>
-		<servlet-name>widget.my.connections</servlet-name>
+		<servlet-name>sakai.widget.my.connections</servlet-name>
 	    <servlet-class>org.apache.wicket.protocol.http.WicketServlet</servlet-class>
 	    <init-param>
 	      	<param-name>applicationClassName</param-name>
@@ -16,7 +16,7 @@
 		<load-on-startup>1</load-on-startup>
   	</servlet>
     <servlet-mapping>
-    	<servlet-name>widget.my.connections</servlet-name>
+    	<servlet-name>sakai.widget.my.connections</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
@@ -65,7 +65,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>sakai.request</filter-name>
-		<servlet-name>widget.my.connections</servlet-name>
+		<servlet-name>sakai.widget.my.connections</servlet-name>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
