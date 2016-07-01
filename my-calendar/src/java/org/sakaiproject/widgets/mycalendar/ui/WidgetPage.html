@@ -87,9 +87,12 @@ $(document).ready(function() {
 			displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
 	    },
 	    onChangeMonthYear: function(year, month) {
-	    	eventList = getEvents(year + "-" + (month > 9 ? month : "0" + month) + "-01");
-	    	$(".my-calendar-events").text("");
-	    	$(".my-calendar-event-heading").text("");
+			// The -1 is because javascript dates are numbered from 0
+			var monthFirstDate = new Date(year, month-1);
+			$('.my-calendar').datepicker("setDate", monthFirstDate);
+			var monthFirst = year + "-" + (month > 9 ? month : "0" + month) + "-01";
+	    	eventList = getEvents(monthFirst);
+			displayEvents(monthFirst, moment().format('YYYY-MM-DD') === monthFirst);
 	    },
 	    // config
 	    showOtherMonths: true,
@@ -107,22 +110,26 @@ $(document).ready(function() {
 });
 
 //change the day when arrow buttons are selected
+// DRY
+function doCalendarArrow(sign) {
+    var newDate = $('.my-calendar').datepicker('getDate');
+	// Daylight Savings Time proof way to add or subtract a day
+	newDate.setDate(newDate.getDate() + sign);
+	$('.my-calendar').datepicker("setDate", newDate);
+	// If the month changed on this arrow, the date will be set to the first of the month
+	// make sure we have the correct day by setting it again, which will not
+	// re-invoke onChangeMonthYear
+	$('.my-calendar').datepicker("setDate", newDate);
+	var formattedDate = moment(newDate).format('YYYY-MM-DD');
+	displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+}
+
 $(document).on("click", '.left-arrow', function () {
-	var date = $('.my-calendar').datepicker('getDate');
-    var newDate = date.getTime() - (1000*60*60*24);
-    var formattedDate = moment(newDate).format('YYYY-MM-DD');
-    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
-    date.setTime(newDate);
-    $('.my-calendar').datepicker("setDate", date);
+	doCalendarArrow(-1);
 });
 
 $(document).on("click", '.right-arrow', function () {
-	var date = $('.my-calendar').datepicker('getDate');
-    var newDate = date.getTime() + (1000*60*60*24);
-    var formattedDate = moment(newDate).format('YYYY-MM-DD');
-    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
-    date.setTime(newDate);
-    $('.my-calendar').datepicker("setDate", date);
+	doCalendarArrow(+1);
 });
 
 /**
@@ -243,7 +250,8 @@ function getEventsDisplay(events) {
 		var evnt = events[i];
 
 		// get the event time (need to use millisecond value as the display value can differ in format)
-		var time = moment(evnt.firstTime.time).format("LT");
+		// Note: we want to use the timeZone set on the server, not whatever the browser has
+		var time = moment(evnt.firstTime.time).tz(timeZone).format("LT");
 				
 		var eventUrl = undefined;
 		var target = undefined;
