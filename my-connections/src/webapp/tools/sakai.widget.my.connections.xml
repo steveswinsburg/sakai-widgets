@@ -2,7 +2,7 @@
 
 <registration>
 	<tool id="sakai.widget.my.connections"
-    	title="My Connections"
+    	title="Connections"
         description="A widget that shows a user's connections">
     	
     	<category name="myworkspace" />
