@@ -13,8 +13,10 @@ li.my-calendar-event {
 }
 
 .my-calendar-event-heading {
-	text-size: 0.85em;
 	margin-left: 2px;
+	text-align: center;
+	font-weight: bold;
+	color: #777;
 }
 
 .left-arrow, .right-arrow {
@@ -34,13 +36,8 @@ li.my-calendar-event {
 }
 
 div.ui-datepicker-inline {
-	width: 80%;
+	width: 100%;
 	margin: 0px auto;
-}
-
-h3.my-calendar-event-heading {
-	text-align: center;
-	color: #777;
 }
 
 div.my-calendar-events-div {
