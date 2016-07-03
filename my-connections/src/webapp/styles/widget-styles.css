@@ -16,5 +16,20 @@
 	padding-top: 20px;
 }
 
+div.Mrphs-sakai-widget-my-connections>nav.Mrphs-toolTitleNav {
+  border: 1px solid #e0e0e0;
+  background-color: #f0f0f0;
+  text-align: center;
+  box-sizing: border-box;
+}
 
+div.Mrphs-sakai-widget-my-connections>nav.Mrphs-toolTitleNav>h2.Mrphs-toolTitleNav__title {
+  color: #333;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+div.Mrphs-sakai-widget-my-connections>div.Mrphs-toolBody--sakai-widget-my-connections>div>table {
+     margin: 0px auto;
+}
 

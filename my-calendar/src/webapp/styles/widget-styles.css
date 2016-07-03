@@ -14,7 +14,9 @@ li.my-calendar-event {
 
 .my-calendar-event-heading {
 	margin-left: 2px;
-	/* todo this should be centred, so should the datepicker */
+	text-align: center;
+	font-weight: bold;
+	color: #777;
 }
 
 .left-arrow, .right-arrow {
@@ -32,3 +34,22 @@ li.my-calendar-event {
 .my-calendar-event-type {
 	font-weight: bold;
 }
+
+div.ui-datepicker-inline {
+	width: 100%;
+	margin: 0px auto;
+}
+
+div.my-calendar-events-div {
+	margin-bottom: 9px
+}
+
+table.my-calendar-events {
+	margin: 0px auto;
+}
+
+table.my-calendar-event {
+	margin: 0 auto;
+	text-align: left;
+}
+

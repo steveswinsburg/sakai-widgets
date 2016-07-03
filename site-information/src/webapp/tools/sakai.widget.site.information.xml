@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 
 <registration>
-	<tool id="widget.my.connections"
-    	title="My Connections"
-        description="A widget that shows a user's connections">
+	<tool id="sakai.widget.site.information"
+    	title="Site Information Widget"
+        description="A widget that shows site information">
     	
-    	<category name="myworkspace" />
     	<category name="project" />
     	<category name="course" />
 		

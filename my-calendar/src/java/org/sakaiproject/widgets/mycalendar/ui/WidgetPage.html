@@ -13,34 +13,32 @@
 
 <!--  layout -->
 <div class="my-calendar"></div>
-<h3 class="my-calendar-event-heading"></h3>
-<div class="my-calendar-events"></div>
+<div class="my-calendar-event-heading"></div>
+<div class="my-calendar-events-div">
+	<table class="my-calendar-events"> 
+	</table>
+</div>
 
 <!--  templates -->
 <script id="my-calendar-event-template" type="text/x-jsrender">
-	<table class="my-calendar-event"> 
 		<tr> 
 			<td class="my-calendar-event-time"> {{:eventTime}} </td>
 			<td class="my-calendar-event-type"> {{:eventType}} </td>
 		</tr>
 		<tr> 
 			<td></td>
-			<td> {{if eventUrl}} <a href="{{:eventUrl}}" target="_top">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </td>
+			<td> {{if eventUrl}} <a href="{{:eventUrl}}" target="{{:target}}">{{:eventTitle}}</a> {{else}} {{:eventTitle}} {{/if}} </td>
 		</tr>
 		<tr> 
 			<td></td>
-			<td> <a href="{{:siteUrl}}" target="_top">{{:siteName}}</a> </td>
+			<td> (<a href="{{:siteUrl}}" target="_top">{{:siteName}}</a>) </td>
 		</tr>
-	</table>
-
 </script>
 
 <script id="my-calendar-heading-template" type="text/x-jsrender">
-	<h3>
 		<i class="fa fa-arrow-circle-o-left fa-lg left-arrow" aria-hidden="true"></i>
 		{{:heading}}
 		<i class="fa fa-arrow-circle-o-right fa-lg right-arrow" aria-hidden="true"></i>
-	</h3>
 </script>
 
 
@@ -51,6 +49,7 @@ var timeZone;
 var eventsList = [];
 
 $(document).ready(function() {
+    moment.locale(sakai.locale.userLocale);
 	
 	// data
 	currentSiteId = $(".my-calendar-data").attr("data-siteid");
@@ -86,12 +85,21 @@ $(document).ready(function() {
 			displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
 	    },
 	    onChangeMonthYear: function(year, month) {
-	    	eventList = getEvents(year + "-" + (month > 9 ? month : "0" + month) + "-01");
-	    	$(".my-calendar-events").text("");
-	    	$(".my-calendar-event-heading").text("");
+			// The -1 is because javascript dates are numbered from 0
+			var monthFirstDate = new Date(year, month-1);
+			$('.my-calendar').datepicker("setDate", monthFirstDate);
+			var monthFirst = year + "-" + (month > 9 ? month : "0" + month) + "-01";
+	    	eventList = getEvents(monthFirst);
+			displayEvents(monthFirst, moment().format('YYYY-MM-DD') === monthFirst);
 	    },
 	    // config
-	    showOtherMonths: true
+	    showOtherMonths: true,
+	    // Get localized names for things
+	    monthNames: moment.months(),
+	    monthNamesShort: moment.monthsShort(),
+	    dayNames: moment.weekdays(),
+	    dayNamesShort: moment.weekdaysShort(),
+	    dayNamesMin: moment.weekdaysMin()
 	});
 	
 	//show heading and events for today
@@ -100,22 +108,26 @@ $(document).ready(function() {
 });
 
 //change the day when arrow buttons are selected
+// DRY
+function doCalendarArrow(sign) {
+    var newDate = $('.my-calendar').datepicker('getDate');
+	// Daylight Savings Time proof way to add or subtract a day
+	newDate.setDate(newDate.getDate() + sign);
+	$('.my-calendar').datepicker("setDate", newDate);
+	// If the month changed on this arrow, the date will be set to the first of the month
+	// make sure we have the correct day by setting it again, which will not
+	// re-invoke onChangeMonthYear
+	$('.my-calendar').datepicker("setDate", newDate);
+	var formattedDate = moment(newDate).format('YYYY-MM-DD');
+	displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
+}
+
 $(document).on("click", '.left-arrow', function () {
-	var date = $('.my-calendar').datepicker('getDate');
-    var newDate = date.getTime() - (1000*60*60*24);
-    var formattedDate = moment(newDate).format('YYYY-MM-DD');
-    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
-    date.setTime(newDate);
-    $('.my-calendar').datepicker("setDate", date);
+	doCalendarArrow(-1);
 });
 
 $(document).on("click", '.right-arrow', function () {
-	var date = $('.my-calendar').datepicker('getDate');
-    var newDate = date.getTime() + (1000*60*60*24);
-    var formattedDate = moment(newDate).format('YYYY-MM-DD');
-    displayEvents(formattedDate, moment().format('YYYY-MM-DD') === formattedDate);
-    date.setTime(newDate);
-    $('.my-calendar').datepicker("setDate", date);
+	doCalendarArrow(+1);
 });
 
 /**
@@ -130,7 +142,7 @@ function displayEvents(formattedDate, today) {
 	if (today) {
 		var headingText = {"heading": jQuery.i18n.prop('event_heading_today')};
 	} else {
-		var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("MMM DD, YYYY"))};
+		var headingText = {"heading": jQuery.i18n.prop('event_heading', moment(formattedDate).format("LL"))};
 	}
 	
 	var headingHtml = headingTmpl.render(headingText);
@@ -147,7 +159,7 @@ function displayEvents(formattedDate, today) {
 		$(".my-calendar-events").html(rendered);
 		
 	} else {
-		 $(".my-calendar-events").text(jQuery.i18n.prop('no_events'));
+		 $(".my-calendar-events").html("<tr><td>"+jQuery.i18n.prop('no_events')+"</td></tr>");
 	}
 	
 	setMainFrameHeightNow(window.name, -1);
@@ -219,40 +231,58 @@ function getEvents(date, singleDay) {
 function getEventsDisplay(events) {
 	
 	var eventsDisplay = [];
-	var time;
-	var eventUrl;
-	var samigoRegex = /(http)(s)?(:\/\/)(\w)+(:)?(\d)*(\/samigo-app\/servlet\/Login\?id=\w*)/g;
+	var regexps = [
+	  /* Samigo */
+	  /http(s)?:\/\/[A-Za-z0-9:_.-]+(\/samigo-app\/servlet\/Login\?id=\w*)/ ,
+	  /*
+	     Example eSyncTraining URL
+	     http://sakai.noodle-partners.com:8080/egcint/redirect.jsf\?url=http://sakai.noodle-partners.com:8080/access/basiclti/site/sakai-demo/null/?ltiId=15169%26ltiAction=join%2673ad790e-b17e-46e2-89c3-412cb0167823
+	  */
+	  /http(s)?:\/\/[A-Za-z0-9:_.-]+\/egcint\/redirect.jsf\?url=http(s)?:\/\/[^"']*\/\?ltiId=\d*%26ltiAction=join%26[0-9A-Fa-f-]*/
+	];
+	var nRegexps = regexps.length;
 	
-	for (i = 0; i < events.length; i++) {
-		
+	for (var i = 0; i < events.length; i++) {
+
 		// loop event
-		var event = events[i];
-		
+		var evnt = events[i];
+
 		// get the event time (need to use millisecond value as the display value can differ in format)
-		time = moment(event.firstTime.time).format("h:mm a");
+		// Note: we want to use the timeZone set on the server, not whatever the browser has
+		var time = moment(evnt.firstTime.time).tz(timeZone).format("LT");
 				
+		var eventUrl = undefined;
+		var target = undefined;
 		// assignments deeplink
-		if (event.assignmentId.length > 0) {
+		if (evnt.assignmentId.length > 0) {
 			jQuery.ajax({
-				url: "/direct/assignment/deepLink/" + event.siteId + "/" + event.assignmentId + ".json",
+				url: "/direct/assignment/deepLink/" + evnt.siteId + "/" + evnt.assignmentId + ".json",
 				success: function (result) {
 					eventUrl = result.data.assignmentUrl;
+					target = "_top";
 				},
 				async: false
 			}); 
 		}
 		
-		// samigo 'deeplink'
+		// samigo 'deeplink' or eSyncTraining meeting link
 		// extract the URL from the description
-		if (event.descriptionFormatted.length > 0) {
-			var matches = samigoRegex.exec(event.descriptionFormatted);
-			if(matches && matches.length > 0) {
-				eventUrl = matches[0];
+		var ed = evnt.descriptionFormatted;
+		if (ed.length > 0) {
+			for(var j = 0; j<nRegexps; j++) {
+				var reg = regexps[j];
+				var matches = reg.exec(ed);
+				if(matches && matches.length > 0) {
+					eventUrl = matches[0];
+					target = "_blank";
+					break;
+				}
 			}
 		}
 		
 		//add the event to the list
-		eventsDisplay.push({"eventTime": time, "eventType": event.type, "eventTitle": event.title, "eventUrl": eventUrl, "siteName": event.siteName, "siteUrl": "/portal/site/" + event.siteId});
+		eventsDisplay.push({"eventTime": time, "eventType": evnt.type, "eventTitle": evnt.title, "eventUrl": eventUrl, "target": target,
+			"siteName": evnt.siteName, "siteUrl": "/portal/site/" + evnt.siteId});
 	}
 	return eventsDisplay;
 }

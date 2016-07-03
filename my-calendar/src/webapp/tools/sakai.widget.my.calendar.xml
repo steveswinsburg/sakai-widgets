@@ -1,12 +1,15 @@
 <?xml version="1.0"?>
 
 <registration>
-	<tool id="widget.site.members"
-    	title="Site Members"
-        description="A widget that shows the members of the site">
+	<tool id="sakai.widget.my.calendar"
+    	title="My Calendar"
+        description="A widget that shows a user's calendar and upcoming events">
     	
+    	<category name="myworkspace" />
     	<category name="project" />
     	<category name="course" />
+		
+		<!-- <configuration name="functions.require" value="calendar.read" /> -->
 		
 		<configuration name="reset.button" value="false" />
 		<configuration name="help.button" value="false" />

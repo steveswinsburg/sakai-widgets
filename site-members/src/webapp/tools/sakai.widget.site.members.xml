@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <registration>
-	<tool id="widget.site.information"
-    	title="Site Information Widget"
-        description="A widget that shows site information">
+	<tool id="sakai.widget.site.members"
+    	title="Site Members"
+        description="A widget that shows the members of the site">
     	
     	<category name="project" />
     	<category name="course" />
@@ -13,7 +13,7 @@
 		<configuration name="sakai:tool-directurl-enabled" value="false" />
 		
 		<configuration name="renderInline" value="true" />
-		<configuration name="suppressTitle" value="true" />
+		<configuration name="suppressTitle" value="false" />
 
 	</tool>
 </registration>

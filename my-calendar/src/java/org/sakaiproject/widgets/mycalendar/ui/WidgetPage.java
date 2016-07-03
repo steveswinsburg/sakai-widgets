@@ -76,9 +76,9 @@ public class WidgetPage extends WebPage {
 		// for datepicker
 		response.render(new PriorityHeaderItem(
 				JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getJQueryReference())));
-		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/jquery-ui.min.css?version=%s", version)));
-		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jquery-ui.min.js?version=%s", version)));
-		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment.js?version=%s", version)));
+		response.render(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/jquery-ui/1.11.3/jquery-ui.min.css?version=%s", version)));
+		response.render(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/jquery-ui/1.11.3/jquery-ui.min.js?version=%s", version)));
+		response.render(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/momentjs/2.11.1/min/moment-with-locales.min.js?version=%s", version)));
 		response.render(
 				JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment-timezone-with-data.js?version=%s", version)));
 

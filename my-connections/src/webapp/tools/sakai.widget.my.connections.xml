@@ -1,22 +1,20 @@
 <?xml version="1.0"?>
 
 <registration>
-	<tool id="widget.my.calendar"
-    	title="My Calendar"
-        description="A widget that shows a user's calendar and upcoming events">
+	<tool id="sakai.widget.my.connections"
+    	title="Connections"
+        description="A widget that shows a user's connections">
     	
     	<category name="myworkspace" />
     	<category name="project" />
     	<category name="course" />
-		
-		<!-- <configuration name="functions.require" value="calendar.read" /> -->
 		
 		<configuration name="reset.button" value="false" />
 		<configuration name="help.button" value="false" />
 		<configuration name="sakai:tool-directurl-enabled" value="false" />
 		
 		<configuration name="renderInline" value="true" />
-		<configuration name="suppressTitle" value="true" />
+		<configuration name="suppressTitle" value="false" />
 
 	</tool>
 </registration>
