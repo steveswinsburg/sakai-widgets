@@ -212,6 +212,9 @@ function getEvents(date, singleDay) {
 		var endDate = date.substring(0,4) + "-" + date.substring(5,7) + "-31";
 		url += "?firstDate=" + startDate + "&lastDate=" + endDate;
 	}
+	
+	//add randomness to refresh the request
+	url += "&z=" + moment().unix();
  	
 	var events = [];
 	jQuery.ajax({
