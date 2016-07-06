@@ -1,6 +1,7 @@
 package org.sakaiproject.widgets.myconnections;
 
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.sakaiproject.widgets.myconnections.ui.WidgetPage;
 
@@ -36,6 +37,10 @@ public class WidgetApplication extends WebApplication {
 		getMarkupSettings().setStripWicketTags(true);
 		getMarkupSettings().setStripComments(true);
 		getMarkupSettings().setCompressWhitespace(true);
+		
+		// suppress jquery output
+		getJavaScriptLibrarySettings().setJQueryReference(new PackageResourceReference(WidgetApplication.class,"empty.js"));
+
 
 		// to put this app into deployment mode, see web.xml
 	}

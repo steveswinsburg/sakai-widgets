@@ -73,21 +73,20 @@ public class WidgetPage extends WebPage {
 		// Tool additions (at end so we can override if required)
 		response.render(StringHeaderItem.forString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"));
 
-		// for datepicker
-		response.render(new PriorityHeaderItem(
-				JavaScriptHeaderItem.forReference(getApplication().getJavaScriptLibrarySettings().getJQueryReference())));
+		// use Sakai jQuery (Wicket's one is suppressed in the Application#init)
+		response.render(new PriorityHeaderItem(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/jquery/1.11.3/jquery.min.js?version=%s", version))));
+		
+		// for datepicker		
 		response.render(CssHeaderItem.forUrl(String.format("/library/webjars/jquery-ui/1.11.3/jquery-ui.min.css?version=%s", version)));
 		response.render(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/jquery-ui/1.11.3/jquery-ui.min.js?version=%s", version)));
 		response.render(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/momentjs/2.11.1/min/moment-with-locales.min.js?version=%s", version)));
-		response.render(
-				JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment-timezone-with-data.js?version=%s", version)));
+		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/moment-timezone-with-data.js?version=%s", version)));
 
 		// templating
 		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jsrender.min.js?version=%s", version)));
 
 		// i18n
-		response.render(
-				JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jquery.i18n.properties.min.js?version=%s", version)));
+		response.render(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/jquery.i18n.properties.min.js?version=%s", version)));
 
 		// widget specific styles
 		response.render(CssHeaderItem.forUrl(String.format("/my-calendar/styles/widget-styles.css?version=%s", version)));
