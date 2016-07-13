@@ -1,7 +1,8 @@
 package org.sakaiproject.widgets.siteinformation;
 
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.sakaiproject.widgets.siteinformation.ui.WidgetPage;
 
@@ -37,9 +38,14 @@ public class WidgetApplication extends WebApplication {
 		getMarkupSettings().setStripWicketTags(true);
 		getMarkupSettings().setStripComments(true);
 		getMarkupSettings().setCompressWhitespace(true);
+			
+		// Suppress internal jQuery
+		getJavaScriptLibrarySettings().setJQueryReference(new UrlResourceReference(Url.parse("/site-information/scripts/wicket/empty.js")));
 		
-		// suppress jquery output
-		getJavaScriptLibrarySettings().setJQueryReference(new PackageResourceReference(WidgetApplication.class,"empty.js"));
+		// To support inline rendering, these references need to be corrected so the URL to them renders correctly
+		// Without this it sets the context path to /page/ instead of the webapp name.
+		// These were extracted from Wicket and should be kept in sync if Wicket is upgraded
+		getJavaScriptLibrarySettings().setWicketEventReference(new UrlResourceReference(Url.parse("/site-information/scripts/wicket/wicket-event-jquery.min.js")));
 
 		// to put this app into deployment mode, see web.xml
 	}

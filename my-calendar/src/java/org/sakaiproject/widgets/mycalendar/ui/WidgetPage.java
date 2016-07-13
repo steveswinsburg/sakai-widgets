@@ -73,7 +73,7 @@ public class WidgetPage extends WebPage {
 		// Tool additions (at end so we can override if required)
 		response.render(StringHeaderItem.forString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"));
 
-		// use Sakai jQuery (Wicket's one is suppressed in the Application#init)
+		// use Sakai jQuery
 		response.render(new PriorityHeaderItem(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/jquery/1.11.3/jquery.min.js?version=%s", version))));
 		
 		// for datepicker		
