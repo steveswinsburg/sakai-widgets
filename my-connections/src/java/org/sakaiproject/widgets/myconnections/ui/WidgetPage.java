@@ -67,12 +67,12 @@ public class WidgetPage extends WebPage {
 		// get current user
 		final String currentUserUuid = this.sessionManager.getCurrentSessionUserId();
 		
-		log.error("********CURRENT USER ID: " + currentUserUuid);
+		//log.error("********CURRENT USER ID: " + currentUserUuid);
 
 		// get connections, sort and slice
 		List<BasicConnection> connections = this.connectionsLogic.getBasicConnectionsForUser(currentUserUuid);
 
-		log.error("********connections: " + connections.size());
+		//log.error("********connections: " + connections.size());
 
 		// sort
 		Collections.sort(connections, new Comparator<BasicConnection>() {
@@ -93,7 +93,7 @@ public class WidgetPage extends WebPage {
 				.limit(this.maxUsers)
 				.collect(Collectors.toList());
 
-		log.error("********connections 2: " + connections.size());
+		//log.error("********connections 2: " + connections.size());
 
 		
 		// add connections grid or label
