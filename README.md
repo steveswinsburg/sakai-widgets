@@ -28,6 +28,8 @@ Currently requires Sakai 12, or backport these features:
 * https://jira.sakaiproject.org/browse/SAK-31284
 * https://jira.sakaiproject.org/browse/SAK-31321 (optional)
 
+## Installation
+Download the code either via cloning or grabbing the zip then in the top level directory, run: `mvn clean install sakai:deploy -Dmaven.tomcat.home=/path/to/your/tomcat`.
 
 ## Available configuration
 
@@ -39,5 +41,8 @@ widget.sitemembers.maxusers=30
 widget.myconnections.maxusers=30
 
 ````
+
+## Inline rendering
+All of these widgets are capable of rendering themselves inline in a multi tool page layout in Sakai.
 
 
