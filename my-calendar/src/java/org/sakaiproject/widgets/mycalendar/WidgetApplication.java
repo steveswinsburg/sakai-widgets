@@ -39,13 +39,11 @@ public class WidgetApplication extends WebApplication {
 		getMarkupSettings().setStripComments(true);
 		getMarkupSettings().setCompressWhitespace(true);
 		
-		// Suppress internal jQuery
+		// Suppress internal javascript references
+		// When rendered inline, the URLs these generate are incorrect - the context path is /page/ instead of the webapp name.
+		// However it is cleaner if we just handle this manually in the page
 		getJavaScriptLibrarySettings().setJQueryReference(new UrlResourceReference(Url.parse("/my-calendar/scripts/wicket/empty.js")));
-		
-		// To support inline rendering, these references need to be corrected so the URL to them renders correctly
-		// Without this it sets the context path to /page/ instead of the webapp name.
-		// These were extracted from Wicket and should be kept in sync if Wicket is upgraded
-		getJavaScriptLibrarySettings().setWicketEventReference(new UrlResourceReference(Url.parse("/my-calendar/scripts/wicket/wicket-event-jquery.min.js")));
+		getJavaScriptLibrarySettings().setWicketEventReference(new UrlResourceReference(Url.parse("/my-calendar/scripts/wicket/empty.js")));
 
 		// to put this app into deployment mode, see web.xml
 	}

@@ -12,7 +12,9 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -64,9 +66,13 @@ public class WidgetPage extends WebPage {
 
 		// get current user
 		final String currentUserUuid = this.sessionManager.getCurrentSessionUserId();
+		
+		log.error("********CURRENT USER ID: " + currentUserUuid);
 
 		// get connections, sort and slice
 		List<BasicConnection> connections = this.connectionsLogic.getBasicConnectionsForUser(currentUserUuid);
+
+		log.error("********connections: " + connections.size());
 
 		// sort
 		Collections.sort(connections, new Comparator<BasicConnection>() {
@@ -87,6 +93,9 @@ public class WidgetPage extends WebPage {
 				.limit(this.maxUsers)
 				.collect(Collectors.toList());
 
+		log.error("********connections 2: " + connections.size());
+
+		
 		// add connections grid or label
 		if (!connections.isEmpty()) {
 			add(new ConnectionsGrid("connections", Model.ofList(connections)));
@@ -114,6 +123,13 @@ public class WidgetPage extends WebPage {
 
 		// widget specific styles
 		response.render(CssHeaderItem.forUrl(String.format("/my-connections/styles/widget-styles.css?version=%s", version)));
+		
+		// render jQuery and the Wicket event library
+		// Both must be priority so they are emitted into the head
+		response.render(new PriorityHeaderItem(JavaScriptHeaderItem.forUrl(String.format("/library/webjars/jquery/1.11.3/jquery.min.js?version=%s", version))));
+		response.render(new PriorityHeaderItem(JavaScriptHeaderItem.forUrl(String.format("/my-calendar/scripts/wicket/wicket-event-jquery.min.js?version=%s", version))));
+	
+		// NOTE: All libraries apart from jQuery and Wicket Event must be rendered inline with the application. See WidgetPage.html.
 	}
 
 }
