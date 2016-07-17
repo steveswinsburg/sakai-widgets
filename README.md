@@ -18,14 +18,14 @@ When in a user's my workspace, will show a rollup of all events in all sites.
 A better Site Information Display. Pulls the data from Site Info and displays it in an unobtrusive, (soon to be) collapsible view.
 
 ## Dependencies
-Currently requires Sakai 12, or backport these features:
+Currently requires Sakai 12, or backport these features to 11.x:
 * https://jira.sakaiproject.org/browse/SAK-31206
 * ~~https://jira.sakaiproject.org/browse/SAK-31220~~ (already resolved in 11)
 * ~~https://jira.sakaiproject.org/browse/SAK-30728~~ (already resolved in 11)
 * ~~https://jira.sakaiproject.org/browse/SAK-30729~~ (already resolved in 11)
 * https://jira.sakaiproject.org/browse/SAK-31247
 * https://jira.sakaiproject.org/browse/SAK-31352
-* https://jira.sakaiproject.org/browse/SAK-31284
+* ~~https://jira.sakaiproject.org/browse/SAK-31284~~ (already resolved in 11)
 * https://jira.sakaiproject.org/browse/SAK-31321 (optional)
 
 ## Installation
