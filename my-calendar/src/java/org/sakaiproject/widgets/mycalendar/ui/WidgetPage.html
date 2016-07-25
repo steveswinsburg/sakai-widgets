@@ -174,13 +174,15 @@ function displayEvents(formattedDate, today) {
 
 /**
  * Parse the event list and count the number of events that match the date
- * @param date from the datepicker, is in the format mm/dd/yyyy
+ * Note: the way this is written it will work even if the timezone on the Sakai
+ * end is not the same as the browser's.
+ * @param date from the datepicker - it's a javascript date object
  */
 function countEvents(date) {
 	var numEvents = 0;
 	for (i = 0; i < eventList.length; i++) {
-		eventDate = moment(eventList[i].firstTime.time).tz(timeZone);
-		if (eventDate.isSame(moment(date), "day")) {
+		var ar = moment(eventList[i].firstTime.time).tz(timeZone).toArray();
+		if (ar[0] == date.getFullYear() && ar[1] == date.getMonth() && ar[2] == date.getDate()) {
 			numEvents += 1;
 		}
 	}
