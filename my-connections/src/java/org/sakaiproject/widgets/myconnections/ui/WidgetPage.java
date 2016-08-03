@@ -24,6 +24,8 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.profile2.logic.ProfileConnectionsLogic;
 import org.sakaiproject.profile2.model.BasicConnection;
+import org.sakaiproject.profile2.model.BasicPerson;
+import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.widgets.myconnections.ui.components.ConnectionsGrid;
 
@@ -68,6 +70,36 @@ public class WidgetPage extends WebPage {
 		final String currentUserUuid = this.sessionManager.getCurrentSessionUserId();
 		
 		//log.error("********CURRENT USER ID: " + currentUserUuid);
+
+		// TODO: DRY this out
+		// get requests
+		List<Person> requests = this.connectionsLogic.getConnectionRequestsForUser(currentUserUuid);
+		
+		// sort
+		Collections.sort(requests, new Comparator<Person>() {
+
+			@Override
+			public int compare(final Person o1, final Person o2) {
+				return new CompareToBuilder()
+						.append(o1.getDisplayName(), o2.getDisplayName())
+						.toComparison();
+			}
+
+		});
+
+		// add requests grid
+		if(!requests.isEmpty()) {
+		  add(new Label("requests_label", new ResourceModel("label.requests"))
+			.add(new AttributeAppender("class", "my-connections-label-center")));
+		  add(new ConnectionsGrid("requests", Model.ofList(requests)));
+		  add(new Label("connections_label", new ResourceModel("label.connections"))
+			.add(new AttributeAppender("class", "my-connections-label-center")));
+		} else {
+		  // Labels are unnecessary if there are no requests
+		  add(new Label("requests_label", ""));
+		  add(new Label("requests", ""));
+		  add(new Label("connections_label", ""));
+		}
 
 		// get connections, sort and slice
 		List<BasicConnection> connections = this.connectionsLogic.getBasicConnectionsForUser(currentUserUuid);
