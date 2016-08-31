@@ -18,12 +18,14 @@ import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.profile2.logic.ProfileConnectionsLogic;
 import org.sakaiproject.profile2.model.BasicConnection;
+import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.widgets.myconnections.ui.components.ConnectionsGrid;
 
@@ -67,12 +69,26 @@ public class WidgetPage extends WebPage {
 		// get current user
 		final String currentUserUuid = this.sessionManager.getCurrentSessionUserId();
 		
-		//log.error("********CURRENT USER ID: " + currentUserUuid);
-
+		// get requests
+		List<Person> requests = this.connectionsLogic.getConnectionRequestsForUser(currentUserUuid);
+		
+		// sort
+		Collections.sort(requests);
+		
+		// add requests grid
+		if(!requests.isEmpty()) {
+			add(new Label("requestsLabel", new ResourceModel("label.requests")));
+			add(new ConnectionsGrid("requests", Model.ofList(requests)));
+			add(new Label("connectionsLabel", new ResourceModel("label.connections")));
+		} else {
+			add(new EmptyPanel("requestsLabel"));
+			add(new EmptyPanel("requests"));
+			add(new EmptyPanel("connectionsLabel"));
+		}
+		
+		
 		// get connections, sort and slice
 		List<BasicConnection> connections = this.connectionsLogic.getBasicConnectionsForUser(currentUserUuid);
-
-		//log.error("********connections: " + connections.size());
 
 		// sort
 		Collections.sort(connections, new Comparator<BasicConnection>() {
@@ -92,9 +108,6 @@ public class WidgetPage extends WebPage {
 				.stream()
 				.limit(this.maxUsers)
 				.collect(Collectors.toList());
-
-		//log.error("********connections 2: " + connections.size());
-
 		
 		// add connections grid or label
 		if (!connections.isEmpty()) {

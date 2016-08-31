@@ -33,3 +33,10 @@ div.Mrphs-sakai-widget-my-connections>div.Mrphs-toolBody--sakai-widget-my-connec
      margin: 0px auto;
 }
 
+div.my-connections-label-center {
+	text-align: center;
+	color: #333;
+	font-weight: bold;
+	font-size: 18px;
+}
+

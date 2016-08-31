@@ -12,16 +12,16 @@ import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.sakaiproject.profile2.model.BasicConnection;
+import org.sakaiproject.profile2.model.BasicPerson;
 
 /**
- * Generic grid panel that can be used to render a list of {@link BasicConnection}s as their images
+ * Generic grid panel that can be used to render a list of {@link BasicPerson}s as their images
  */
 public class ConnectionsGrid extends Panel {
 
 	private static final long serialVersionUID = 1L;
 
-	public ConnectionsGrid(final String id, final IModel<List<? extends BasicConnection>> iModel) {
+	public ConnectionsGrid(final String id, final IModel<List<? extends BasicPerson>> iModel) {
 		super(id, iModel);
 	}
 
@@ -30,23 +30,22 @@ public class ConnectionsGrid extends Panel {
 		super.onInitialize();
 
 		@SuppressWarnings("unchecked")
-		final List<BasicConnection> connections = (List<BasicConnection>) getDefaultModelObject();
+		final List<BasicPerson> connections = (List<BasicPerson>) getDefaultModelObject();
 
-		final ListDataProvider<BasicConnection> dataProvider = new ListDataProvider<BasicConnection>(connections);
+		final ListDataProvider<BasicPerson> dataProvider = new ListDataProvider<BasicPerson>(connections);
 
-		final GridView<BasicConnection> gridView = new GridView<BasicConnection>("rows", dataProvider) {
+		final GridView<BasicPerson> gridView = new GridView<BasicPerson>("rows", dataProvider) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(final Item<BasicConnection> item) {
-				final BasicConnection connection = item.getModelObject();
+			protected void populateItem(final Item<BasicPerson> item) {
+				final BasicPerson connection = item.getModelObject();
 				final ProfileThumbnail img = new ProfileThumbnail("img", Model.of(connection.getUuid()));
 				
 				final String url = "/direct/my/profile-view/" + connection.getUuid();
 				
 				img.add(new AttributeModifier("href", url));
 				img.add(new AttributeModifier("target", "_top"));
-				//img.add(new AttributeModifier("title", connection.getDisplayName()));
 				item.add(img);
 				
 				//name link
@@ -54,7 +53,7 @@ public class ConnectionsGrid extends Panel {
 			}
 
 			@Override
-			protected void populateEmptyItem(final Item<BasicConnection> item) {
+			protected void populateEmptyItem(final Item<BasicPerson> item) {
 				item.add(new EmptyPanel("img"));
 				item.add(new EmptyPanel("name"));
 				item.setVisible(false);
